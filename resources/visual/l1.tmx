@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="64" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="20">
+ <tileset firstgid="1" source="portal.tsx"/>
+ <layer id="4" name="background" width="64" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMBKHr9v07LcdAwVVTVVVVVVVVVV8/RtoYHw==
+  </data>
+ </layer>
+ <layer id="1" name="graphics" width="64" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt2TEKgDAMBdAiVe9/Y7u4iLQqtQp5H0KmOPgIGZpTSnOpHLQvpdbAff8P0XL0jxb+/Pnz7+0/VWrE/NXwt//8+fPnz/9eaje6dadbs6O+wd/+8+fPnz//8zy9sW/M9J7jb//58+f/j3dY77/f9A0AYgiD
+  </data>
+ </layer>
+ <objectgroup id="3" name="ground">
+  <object id="5" x="16" y="16" width="16" height="480"/>
+  <object id="7" x="32" y="480" width="976" height="16"/>
+  <object id="8" x="992" y="16" width="16" height="464"/>
+  <object id="9" x="32" y="16" width="960" height="16"/>
+  <object id="10" x="320" y="128" width="112" height="16"/>
+  <object id="11" x="576" y="128" width="112" height="16"/>
+  <object id="12" x="208" y="256" width="128" height="16"/>
+  <object id="13" x="448" y="256" width="160" height="16"/>
+  <object id="14" x="720" y="256" width="160" height="16"/>
+  <object id="15" x="768" y="384" width="144" height="16"/>
+  <object id="16" x="544" y="384" width="144" height="16"/>
+  <object id="17" x="336" y="384" width="128" height="16"/>
+  <object id="19" x="112" y="384" width="144" height="16"/>
+ </objectgroup>
+</map>
