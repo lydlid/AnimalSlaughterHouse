@@ -24,6 +24,8 @@ public class Player extends Sprite {
         shape.setRadius(5 / ManifoldTravelers.PPM);
 
         fdef.shape = shape;
+        fdef.filter.maskBits = ManifoldTravelers.MASK_PLAYER;
+        fdef.filter.categoryBits = ManifoldTravelers.CATEGORY_PLAYER;
         b2body.createFixture(fdef);
     }
 }
