@@ -48,7 +48,7 @@ public class PlayScreen implements Screen {
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        world = new World(new Vector2(0,-10),true);
+        world = new World(new Vector2(0,0),true);
         b2dr = new Box2DDebugRenderer();
 
         new B2WorldCreator(world, map);
@@ -76,14 +76,18 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float delta) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP))
-            player.b2body.applyLinearImpulse(new Vector2(0,4f),player.b2body.getWorldCenter(),true);
+        if(Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y <= 2)
+            player.b2body.applyLinearImpulse(new Vector2(0,0.2f),player.b2body.getWorldCenter(),true);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.b2body.getLinearVelocity().y >= -2)
+            player.b2body.applyLinearImpulse(new Vector2(0,-0.2f),player.b2body.getWorldCenter(),true);
 
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
-            player.b2body.applyLinearImpulse(new Vector2(0.1f,0),player.b2body.getWorldCenter(),true);
+            player.b2body.applyLinearImpulse(new Vector2(0.2f,0),player.b2body.getWorldCenter(),true);
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
-            player.b2body.applyLinearImpulse(new Vector2(-0.1f,0),player.b2body.getWorldCenter(),true);
+            player.b2body.applyLinearImpulse(new Vector2(-0.2f,0),player.b2body.getWorldCenter(),true);
+
 
     }
 

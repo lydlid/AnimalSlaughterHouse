@@ -17,6 +17,9 @@ public class Player extends Sprite {
         BodyDef bdef = new BodyDef();
         bdef.position.set(64 / ManifoldTravelers.PPM,64 / ManifoldTravelers.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
+
+        bdef.linearDamping=10;
+
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
