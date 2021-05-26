@@ -9,11 +9,14 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Scenes.Hud;
+import com.celirk.manifoldtravelers.Sprites.Item;
 import com.celirk.manifoldtravelers.Sprites.Player;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
 
@@ -33,12 +36,16 @@ public class PlayScreen implements Screen {
 
     private Player player;
 
-    public PlayScreen(ManifoldTravelers game){
+    private B2WorldCreator creator;
+
+    private Array<Item> items;
+
+    public PlayScreen(ManifoldTravelers game) {
         this.game = game;
 
         gamecam = new OrthographicCamera();
 
-        gamePort = new FitViewport(ManifoldTravelers.V_WIDTH / ManifoldTravelers.PPM,ManifoldTravelers.V_HEIGHT / ManifoldTravelers.PPM,gamecam);
+        gamePort = new FitViewport(ManifoldTravelers.V_WIDTH / ManifoldTravelers.PPM, ManifoldTravelers.V_HEIGHT / ManifoldTravelers.PPM, gamecam);
 
         hud = new Hud(game.batch);
 
@@ -48,13 +55,16 @@ public class PlayScreen implements Screen {
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
 
-        world = new World(new Vector2(0,0),true);
+        world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-        new B2WorldCreator(world, map);
+        creator = new B2WorldCreator(this);
 
-        player = new Player(world);
+        player = new Player(this);
+
+        items = new Array<Item>();
     }
+
     @Override
     public void show() {
 
@@ -64,7 +74,7 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         update(delta);
 
-        Gdx.gl.glClearColor(1,0,0,1);
+        Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         renderer.render();
@@ -76,26 +86,30 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float delta) {
-        if(Gdx.input.isKeyPressed(Input.Keys.UP) && player.b2body.getLinearVelocity().y <= 2)
-            player.b2body.applyLinearImpulse(new Vector2(0,0.2f),player.b2body.getWorldCenter(),true);
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && player.b2body.getLinearVelocity().y <= 2)
+            player.b2body.applyLinearImpulse(new Vector2(0, 0.2f), player.b2body.getWorldCenter(), true);
 
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.b2body.getLinearVelocity().y >= -2)
-            player.b2body.applyLinearImpulse(new Vector2(0,-0.2f),player.b2body.getWorldCenter(),true);
+        if (Gdx.input.isKeyPressed(Input.Keys.S) && player.b2body.getLinearVelocity().y >= -2)
+            player.b2body.applyLinearImpulse(new Vector2(0, -0.2f), player.b2body.getWorldCenter(), true);
 
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2)
-            player.b2body.applyLinearImpulse(new Vector2(0.2f,0),player.b2body.getWorldCenter(),true);
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && player.b2body.getLinearVelocity().x <= 2)
+            player.b2body.applyLinearImpulse(new Vector2(0.2f, 0), player.b2body.getWorldCenter(), true);
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2)
-            player.b2body.applyLinearImpulse(new Vector2(-0.2f,0),player.b2body.getWorldCenter(),true);
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && player.b2body.getLinearVelocity().x >= -2)
+            player.b2body.applyLinearImpulse(new Vector2(-0.2f, 0), player.b2body.getWorldCenter(), true);
 
 
     }
 
-    public void update(float delta) {
+    public void update(float dt) {
         // dt := delta time
-        handleInput(delta);
+        handleInput(dt);
 
-        world.step(1/60f, 6, 2);
+        world.step(1 / 60f, 6, 2);
+
+        for(Item i:items){
+            i.update(dt);
+        }
 
         gamecam.position.x = player.b2body.getPosition().x;
         gamecam.position.y = player.b2body.getPosition().y;
@@ -106,7 +120,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        gamePort.update(width,height);
+        gamePort.update(width, height);
     }
 
     @Override
@@ -131,5 +145,17 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public void appendItem(Item item) {
+        items.add(item);
     }
 }

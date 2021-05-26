@@ -14,25 +14,23 @@ import com.celirk.manifoldtravelers.ManifoldTravelers;
 
 public class Hud implements Disposable {
     public Stage stage;
+    Label countdownLabel;
     private Viewport viewport;
-
     private Integer worldTimer;
     private float timeCount;
     private Integer score;
-
-    Label countdownLabel;
 //    Label scoreLabel;
 //    Label timeLabel;
 //    Label levelLabel;
 //    Label worldLabel;
 //    Label playerLabel;
 
-    public Hud(SpriteBatch sb){
+    public Hud(SpriteBatch sb) {
         worldTimer = 300;
         timeCount = 0;
         score = 0;
 
-        viewport = new FitViewport(ManifoldTravelers.V_WIDTH,ManifoldTravelers.V_HEIGHT,new OrthographicCamera());
+        viewport = new FitViewport(ManifoldTravelers.V_WIDTH, ManifoldTravelers.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
         Table table = new Table();

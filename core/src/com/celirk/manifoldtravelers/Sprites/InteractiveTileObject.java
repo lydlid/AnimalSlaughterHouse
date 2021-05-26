@@ -1,12 +1,18 @@
 package com.celirk.manifoldtravelers.Sprites;
 
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
+import com.celirk.manifoldtravelers.Screens.PlayScreen;
 
-public class InteractiveTileObject {
+public abstract class InteractiveTileObject {
+    protected MapObject object;
+    protected PlayScreen screen;
     protected World world;
     protected TiledMap map;
     protected TiledMapTile tile;
@@ -15,10 +21,12 @@ public class InteractiveTileObject {
 
     protected FixtureDef fdef;
 
-    public InteractiveTileObject(World world, TiledMap map, Rectangle bounds) {
-        this.world = world;
-        this.map = map;
-        this.bounds = bounds;
+    public InteractiveTileObject(PlayScreen screen, MapObject object) {
+        this.screen = screen;
+        this.object = object;
+        this.world = screen.getWorld();
+        this.map = screen.getMap();
+        this.bounds = ((RectangleMapObject) object).getRectangle();
         this.fdef = new FixtureDef();
 
         BodyDef bdef = new BodyDef();
