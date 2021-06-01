@@ -17,8 +17,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Scenes.Hud;
 import com.celirk.manifoldtravelers.Sprites.Item;
+import com.celirk.manifoldtravelers.Sprites.Pistol;
 import com.celirk.manifoldtravelers.Sprites.Player;
+import com.celirk.manifoldtravelers.Sprites.Spawner;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
+import com.celirk.manifoldtravelers.Utils.WorldContactListener;
 
 public class PlayScreen implements Screen {
     private ManifoldTravelers game;
@@ -58,6 +61,8 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
+        //world.setContactListener(new WorldContactListener());
+
         creator = new B2WorldCreator(this);
 
         player = new Player(this);
@@ -74,7 +79,7 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         update(delta);
 
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         renderer.render();
@@ -107,8 +112,12 @@ public class PlayScreen implements Screen {
 
         world.step(1 / 60f, 6, 2);
 
-        for(Item i:items){
-            i.update(dt);
+        for(Item item : items){
+            item.update(dt);
+        }
+
+        for(Spawner spawner : creator.getSpawners()) {
+            spawner.update(dt);
         }
 
         gamecam.position.x = player.b2body.getPosition().x;

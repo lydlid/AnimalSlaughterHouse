@@ -16,6 +16,7 @@ public class Player extends Sprite {
         this.screen = screen;
         this.world = screen.getWorld();
         definePlayer();
+        weapon_on_hand = 0;
     }
 
     public void definePlayer() {

@@ -5,12 +5,16 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
 import com.celirk.manifoldtravelers.Sprites.Ground;
 import com.celirk.manifoldtravelers.Sprites.Portalable;
+import com.celirk.manifoldtravelers.Sprites.Spawner;
 import com.celirk.manifoldtravelers.Sprites.WeaponSpawner;
 
 public class B2WorldCreator {
+    private Array<Spawner> spawners;
+
     public B2WorldCreator(PlayScreen screen) {
         BodyDef bdef = new BodyDef();
         PolygonShape shape = new PolygonShape();
@@ -28,9 +32,15 @@ public class B2WorldCreator {
             new Portalable(screen, object);
         }
 
+        spawners = new Array<Spawner>();
+
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
 
-            new WeaponSpawner(screen, object);
+            spawners.add(new WeaponSpawner(screen, object));
         }
+    }
+
+    public Array<Spawner> getSpawners() {
+        return spawners;
     }
 }

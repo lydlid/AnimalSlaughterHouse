@@ -43,6 +43,14 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
+    apply plugin: 'java'
+
+    test {
+        testLogging {
+            outputs.upToDateWhen {false}
+            showStandardStreams = true
+        }
+    }
 
     dependencies {
         implementation project(":core")

@@ -15,6 +15,7 @@ public class WorldContactListener implements ContactListener {
 
         switch (cDef) {
             case ManifoldTravelers.CATEGORY_PLAYER | ManifoldTravelers.CATEGORY_DROP:
+                System.out.println(1);
                 if(fixA.getFilterData().categoryBits == ManifoldTravelers.CATEGORY_PLAYER) {
                     ((Player) fixA.getUserData()).acquireItem(((Item) fixB.getUserData()).getID());
                 }

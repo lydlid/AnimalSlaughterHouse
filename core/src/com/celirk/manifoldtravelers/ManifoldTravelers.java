@@ -20,9 +20,9 @@ public class ManifoldTravelers extends Game {
     public static final int MASK_PORTALABLE = CATEGORY_PORTAL;
     public static final int MASK_PORTAL = CATEGORY_PORTALABLE | CATEGORY_PLAYER | CATEGORY_GROUND;
     public static final int MASK_PLAYER = CATEGORY_PORTAL | CATEGORY_GROUND | CATEGORY_DROP;
-    public static final int MASK_GROUND = CATEGORY_PORTAL | CATEGORY_PLAYER;
-    public static final int MASK_SPAWNER = CATEGORY_DROP;
-    public static final int MASK_DROP = CATEGORY_SPAWNER | CATEGORY_PLAYER;
+    public static final int MASK_GROUND = CATEGORY_PORTAL | CATEGORY_PLAYER | CATEGORY_DROP;
+    public static final int MASK_SPAWNER = 0;
+    public static final int MASK_DROP = CATEGORY_PLAYER | CATEGORY_DROP | CATEGORY_GROUND;
 
     public SpriteBatch batch;
 
