@@ -13,11 +13,12 @@ public class MenuScreen implements Screen {
     private static final int EXIT_BUTTON_HEIGHT = 60;
     private static final int PLAY_BUTTON_WIDTH = 125;
     private static final int PLAY_BUTTON_HEIGHT = 60;
-    private static final int EXIT_BUTTON_Y = 100;
-    private static final int PLAY_BUTTON_Y = 100;
+    private static final int EXIT_BUTTON_Y = 300;
+    private static final int PLAY_BUTTON_Y = 300;
 
     final ManifoldTravelers game;
 
+    Texture background;
     Texture playButtonActive;
     Texture playButtonInactive;
     Texture exitButtonActive;
@@ -26,6 +27,7 @@ public class MenuScreen implements Screen {
 
     public MenuScreen(final ManifoldTravelers game){
         this.game  =  game;
+        background = new Texture("background.png");
         playButtonActive   = new Texture("play_button_active.png");
         playButtonInactive   = new Texture("play_button_inactive.png");
         exitButtonActive   = new Texture("exit_button_active.png");
@@ -44,8 +46,11 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
 
+        //background
+        game.batch.draw(background,0,0);
 
-        int x = ManifoldTravelers.V_WIDTH;
+        //EXIT button
+        int x = 1280 - ManifoldTravelers.V_WIDTH/2 - PLAY_BUTTON_WIDTH / 2;
         if(Gdx.input.getX() < x + EXIT_BUTTON_WIDTH && Gdx.input.getX() > x){
             game.batch.draw(exitButtonActive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
             if(Gdx.input.isTouched()){
@@ -54,8 +59,8 @@ public class MenuScreen implements Screen {
         }else{
             game.batch.draw(exitButtonInactive, x, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
         }
-
-        int x1 = ManifoldTravelers.V_WIDTH/2 - PLAY_BUTTON_WIDTH / 2;
+        //PLAY button
+        int x1 = 1280 - ManifoldTravelers.V_WIDTH;
         if(Gdx.input.getX() < x1 + PLAY_BUTTON_WIDTH && Gdx.input.getX() > x1){
             game.batch.draw(playButtonActive, x1, PLAY_BUTTON_Y, PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);
             if(Gdx.input.isTouched()){
