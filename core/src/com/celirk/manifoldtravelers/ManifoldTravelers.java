@@ -3,6 +3,7 @@ package com.celirk.manifoldtravelers;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
+import com.celirk.manifoldtravelers.Screens.MenuScreen;
 
 public class ManifoldTravelers extends Game {
     public static final int V_WIDTH = 400;
@@ -30,7 +31,7 @@ public class ManifoldTravelers extends Game {
     @Override
     public void create() {
         batch = new SpriteBatch();
-        setScreen(new PlayScreen(this));
+        this.setScreen(new MenuScreen(this));
 
     }
 
