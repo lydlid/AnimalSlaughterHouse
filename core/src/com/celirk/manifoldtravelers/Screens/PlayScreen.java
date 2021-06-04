@@ -110,7 +110,7 @@ public class PlayScreen implements Screen {
         // dt := delta time
         handleInput(dt);
 
-        world.step(1 / 60f, 6, 2);
+        world.step(dt, 6, 2);
 
         for(Item item : items){
             item.update(dt);
@@ -119,6 +119,8 @@ public class PlayScreen implements Screen {
         for(Spawner spawner : creator.getSpawners()) {
             spawner.update(dt);
         }
+
+        hud.update(dt);
 
         gamecam.position.x = player.b2body.getPosition().x;
         gamecam.position.y = player.b2body.getPosition().y;

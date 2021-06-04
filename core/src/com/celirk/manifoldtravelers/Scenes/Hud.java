@@ -17,9 +17,7 @@ public class Hud implements Disposable {
     Label countdownLabel;
     private Viewport viewport;
     private Integer worldTimer;
-    private float timeCount;
-    private Integer score;
-//    Label scoreLabel;
+    Label FPSLabel;
 //    Label timeLabel;
 //    Label levelLabel;
 //    Label worldLabel;
@@ -27,8 +25,6 @@ public class Hud implements Disposable {
 
     public Hud(SpriteBatch sb) {
         worldTimer = 300;
-        timeCount = 0;
-        score = 0;
 
         viewport = new FitViewport(ManifoldTravelers.V_WIDTH, ManifoldTravelers.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
@@ -36,20 +32,26 @@ public class Hud implements Disposable {
         Table table = new Table();
         table.top();
         table.setFillParent(true);
-
-        countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.CHARTREUSE));
+        // just an example
+        countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         // maybe we dont need too many labels here.
         // if needed just add some labels and u know.
         // this is more of an example here? maybe
-        table.add(countdownLabel).expandX().padTop(10);
         // table.row();
         // to start a new row
-
+        FPSLabel = new Label("0", new Label.LabelStyle(new BitmapFont(), Color.CHARTREUSE));
+        table.add(FPSLabel).expandX().padTop(10);
+        table.add(countdownLabel).expandX().padTop(10);
         stage.addActor(table);
     }
 
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    public void update(float dt){
+
+        FPSLabel.setText(String.format("FPS: %2f", 1 / dt));
     }
 }

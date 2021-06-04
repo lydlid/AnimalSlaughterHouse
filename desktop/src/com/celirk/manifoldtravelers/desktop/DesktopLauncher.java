@@ -13,6 +13,8 @@ public class DesktopLauncher {
         config.width = WIDTH;
         config.height = HEIGHT;
         config.resizable = false;// can't change window size mannully
+        config.vSyncEnabled = false;
+        config.foregroundFPS = 60;
         new LwjglApplication(new ManifoldTravelers(), config);
     }
 }
