@@ -16,10 +16,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Scenes.Hud;
-import com.celirk.manifoldtravelers.Sprites.Item;
-import com.celirk.manifoldtravelers.Sprites.Pistol;
+import com.celirk.manifoldtravelers.Sprites.Item.Item;
 import com.celirk.manifoldtravelers.Sprites.Player;
-import com.celirk.manifoldtravelers.Sprites.Spawner;
+import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
 import com.celirk.manifoldtravelers.Utils.WorldContactListener;
 

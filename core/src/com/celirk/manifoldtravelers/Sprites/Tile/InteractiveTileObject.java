@@ -1,6 +1,5 @@
-package com.celirk.manifoldtravelers.Sprites;
+package com.celirk.manifoldtravelers.Sprites.Tile;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;

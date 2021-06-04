@@ -1,4 +1,4 @@
-package com.celirk.manifoldtravelers.Sprites;
+package com.celirk.manifoldtravelers.Sprites.Tile;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.celirk.manifoldtravelers.ManifoldTravelers;

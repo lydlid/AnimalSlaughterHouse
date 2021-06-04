@@ -3,14 +3,13 @@ package com.celirk.manifoldtravelers.Utils;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
-import com.celirk.manifoldtravelers.Sprites.Ground;
-import com.celirk.manifoldtravelers.Sprites.Portalable;
-import com.celirk.manifoldtravelers.Sprites.Spawner;
-import com.celirk.manifoldtravelers.Sprites.WeaponSpawner;
+import com.celirk.manifoldtravelers.Sprites.Tile.Ground;
+import com.celirk.manifoldtravelers.Sprites.Tile.Portalable;
+import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
+import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.WeaponSpawner;
 
 public class B2WorldCreator {
     private Array<Spawner> spawners;

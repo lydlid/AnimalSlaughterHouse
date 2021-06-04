@@ -2,9 +2,9 @@ package com.celirk.manifoldtravelers.Utils;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
-import com.celirk.manifoldtravelers.Sprites.Item;
+import com.celirk.manifoldtravelers.Sprites.Item.Item;
 import com.celirk.manifoldtravelers.Sprites.Player;
-import com.celirk.manifoldtravelers.Sprites.Spawner;
+import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 
 public class WorldContactListener implements ContactListener {
 

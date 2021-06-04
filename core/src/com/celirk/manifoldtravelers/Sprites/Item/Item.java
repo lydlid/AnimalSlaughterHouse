@@ -1,4 +1,4 @@
-package com.celirk.manifoldtravelers.Sprites;
+package com.celirk.manifoldtravelers.Sprites.Item;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;

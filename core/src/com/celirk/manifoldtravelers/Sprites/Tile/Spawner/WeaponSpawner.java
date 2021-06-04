@@ -1,7 +1,8 @@
-package com.celirk.manifoldtravelers.Sprites;
+package com.celirk.manifoldtravelers.Sprites.Tile.Spawner;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
+import com.celirk.manifoldtravelers.Sprites.Item.Pistol;
 
 public class WeaponSpawner extends Spawner {
     public WeaponSpawner(PlayScreen screen, MapObject object) {
