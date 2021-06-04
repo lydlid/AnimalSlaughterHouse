@@ -61,9 +61,9 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0, 0), true);
         b2dr = new Box2DDebugRenderer();
 
-        //world.setContactListener(new WorldContactListener());
-
         creator = new B2WorldCreator(this);
+
+        world.setContactListener(new WorldContactListener());
 
         player = new Player(this);
 

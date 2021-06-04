@@ -9,15 +9,11 @@ import com.celirk.manifoldtravelers.Screens.PlayScreen;
 public class Pistol extends Item {
     public Pistol(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-
-
-
-
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
-
     }
+
 }

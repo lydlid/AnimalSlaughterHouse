@@ -32,19 +32,28 @@ public abstract class Item extends Sprite {
         fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
         shape.setRadius(6 / ManifoldTravelers.PPM);
-        fdef.filter.maskBits = ManifoldTravelers.MASK_DROP;
-        fdef.filter.categoryBits = ManifoldTravelers.CATEGORY_DROP;
+        fdef.filter.maskBits = ManifoldTravelers.MASK_ITEM;
+        fdef.filter.categoryBits = ManifoldTravelers.CATEGORY_ITEM;
 
         fdef.shape = shape;
         body.createFixture(fdef).setUserData(this);
 
+        toDestroy = false;
+        destroyed = false;
     }
 
     public void update(float dt) {
-
+        if(toDestroy && !destroyed){
+            world.destroyBody(body);
+            destroyed = true;
+        }
     }
 
     public int getID() {
         return id;
+    }
+
+    public void destroy(){
+        toDestroy = true;
     }
 }

@@ -5,11 +5,39 @@ import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
 
 public abstract class Spawner extends InteractiveTileObject {
+    protected boolean isOccupied;
+
+    private float time;
+    protected float time_segment;
+
     public Spawner(PlayScreen screen, MapObject object) {
         super(screen, object);
         fdef.filter.maskBits = ManifoldTravelers.MASK_SPAWNER;
         fdef.filter.categoryBits = ManifoldTravelers.CATEGORY_SPAWNER;
-        body.createFixture(fdef);
+
+        fdef.isSensor = true;
+
+        body.createFixture(fdef).setUserData(this);
+
+        isOccupied = false;
     }
-    public abstract void update(float dt);
+
+    public void update(float dt) {
+        if(isOccupied) {
+            time = -time_segment;
+        }
+        else {
+            time += dt;
+            if (time >= 0) {
+                Spawn();
+                time = -time_segment;
+            }
+        }
+    }
+
+    public void setOccupied(boolean occupied) {
+        isOccupied = occupied;
+    }
+
+    protected abstract void Spawn();
 }

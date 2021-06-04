@@ -35,7 +35,7 @@ public class Player extends Sprite {
         fdef.shape = shape;
         fdef.filter.maskBits = ManifoldTravelers.MASK_PLAYER;
         fdef.filter.categoryBits = ManifoldTravelers.CATEGORY_PLAYER;
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData(this);
     }
 
     public void acquireItem(int id) {
