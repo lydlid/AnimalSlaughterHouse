@@ -38,7 +38,6 @@ public class Player extends Sprite {
     private float attack_time_segment = 1e10F;
 
     public Player(PlayScreen screen) {
-        super(screen.getAtlas().findRegion("cow"));
         this.screen = screen;
         this.world = screen.getWorld();
         currentState = State.DOWN;
@@ -47,34 +46,33 @@ public class Player extends Sprite {
         playerDirection = 0;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for(int i = 1; i < 5; i++){
-            frames.add(new TextureRegion(getTexture(), i*32,0,32, 32));
+        for(int i = 1; i < 4; i++){
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("dog"), i*32,0,32, 32));
         }
-        playerUp = new Animation(0.1f, frames);
+        playerDown = new Animation(0.1f, frames);
         frames.clear();
-        for(int i = 1; i < 5; i++){
-            frames.add(new TextureRegion(getTexture(), i*32,32,32, 32));
+        for(int i = 1; i < 4; i++){
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("dog"), i*32,32,32, 32));
         }
         playerLeft = new Animation(0.1f, frames);
         frames.clear();
-        for(int i = 1; i < 5; i++){
-            frames.add(new TextureRegion(getTexture(), i*32,64,32, 32));
+        for(int i = 1; i < 4; i++){
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("dog"), i*32,64,32, 32));
         }
         playerRight = new Animation(0.1f, frames);
         frames.clear();
-        for(int i = 1; i < 5; i++){
-            frames.add(new TextureRegion(getTexture(), i*32,96,32, 32));
+        for(int i = 1; i < 4; i++){
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("dog"), i*32,96,32, 32));
         }
-        playerDown = new Animation(0.1f, frames);
+        playerUp = new Animation(0.1f, frames);
 
-        playerMove = new TextureRegion(getTexture(), 0,0,32,32);
+        playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
         definePlayer();
         defineUtils();
 
-        setBounds(0,0,32 / ManifoldTravelers.PPM,32 / ManifoldTravelers.PPM);
+        setBounds(0,0,32,32);
         setRegion(playerMove);
-
 
     }
 
@@ -105,7 +103,7 @@ public class Player extends Sprite {
 
     public void update(float dt) {
         attack_time += dt;
-        setPosition(b2body.getPosition().x-getWidth()/2, b2body.getPosition().y - getHeight()/2);
+        setPosition((float) (b2body.getPosition().x+(11.5)*getWidth()/2), b2body.getPosition().y + 6*getHeight()/2);
         setRegion(getFrame(dt));
     }
 
@@ -139,15 +137,15 @@ public class Player extends Sprite {
     }
 
     public State getState() {
-        if(b2body.getLinearVelocity().y > 0)
-            return State.UP;
-        else if(b2body.getLinearVelocity().y < 0)
-            return State.DOWN;
+        if(b2body.getLinearVelocity().x > 0)
+            return State.RIGHT;
+        else if(b2body.getLinearVelocity().x < 0)
+            return State.LEFT;
         else
-            if(b2body.getLinearVelocity().x > 0)
-                return State.RIGHT;
-            else if(b2body.getLinearVelocity().x < 0)
-                return State.LEFT;
+            if(b2body.getLinearVelocity().y > 0)
+                return State.UP;
+            else if(b2body.getLinearVelocity().y < 0)
+                return State.DOWN;
             else
                 return State.DOWN;//没速度时默认朝下
     }
