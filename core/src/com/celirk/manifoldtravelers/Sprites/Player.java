@@ -20,9 +20,9 @@ public class Player extends Sprite {
     private Animation playerUp;
     private Animation playerDown;
     private Animation playerLeft;
-    private  Animation playerRight;
+    private Animation playerRight;
     private float stateTimer;
-    private Integer playerDirection;//{ 0:DOWN , 1:LEFT , 2:UP , 3:RIGHT}
+    //private Integer playerDirection;//{ 0:DOWN , 1:LEFT , 2:UP , 3:RIGHT}
 
 
     public PlayScreen screen;
@@ -37,13 +37,14 @@ public class Player extends Sprite {
     private float attack_time = -1e10F;
     private float attack_time_segment = 1e10F;
 
-    public Player(PlayScreen screen) {
+    public Player(PlayScreen screen, float x, float y) {
         this.screen = screen;
         this.world = screen.getWorld();
         currentState = State.DOWN;
         previousState  = State.DOWN;
         stateTimer = 0;
-        playerDirection = 0;
+        //playerDirection = 0;
+        setPosition(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for(int i = 1; i < 4; i++){
@@ -78,7 +79,7 @@ public class Player extends Sprite {
 
     private void definePlayer() {
         BodyDef bdef = new BodyDef();
-        bdef.position.set(64 / ManifoldTravelers.PPM, 64 / ManifoldTravelers.PPM);
+        bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
 
         bdef.linearDamping = 10;
@@ -129,14 +130,13 @@ public class Player extends Sprite {
                 break;
         }
 
-        //if((b2body.getLinearVelocity().x < 0)) //咱有四个方向的图，不需要flip
-
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
         previousState = currentState;
         return region;
     }
 
     public State getState() {
+
         if(b2body.getLinearVelocity().x > 0)
             return State.RIGHT;
         else if(b2body.getLinearVelocity().x < 0)
@@ -147,7 +147,8 @@ public class Player extends Sprite {
             else if(b2body.getLinearVelocity().y < 0)
                 return State.DOWN;
             else
-                return State.DOWN;//没速度时默认朝下
+                // default: down
+                return State.DOWN;
     }
     public void acquireItem(int id) {
         switch (id){

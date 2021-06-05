@@ -51,10 +51,10 @@ public class ManifoldTravelers extends Game {
         super.render();
     }
 
-//	@Override
-//	public void dispose () {
-//		batch.dispose();
-//	}
+	@Override
+	public void dispose () {
+		batch.dispose();
+	}
 
 
 

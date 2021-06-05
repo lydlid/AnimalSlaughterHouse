@@ -26,6 +26,7 @@ import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
 import com.celirk.manifoldtravelers.Utils.WorldContactListener;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import io.socket.client.IO;
@@ -35,6 +36,8 @@ public class PlayScreen implements Screen {
     private TextureAtlas atlas;
 
     private Socket socket;
+
+    private boolean isHost;
 
     private ManifoldTravelers game;
 
@@ -49,9 +52,11 @@ public class PlayScreen implements Screen {
     private World world;
     private Box2DDebugRenderer b2dr;
 
+    private B2WorldCreator creator;
+
     private Player player;
 
-    private B2WorldCreator creator;
+    private Array<Player> enemies;
 
     private Array<Item> items;
 
@@ -81,7 +86,7 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
-        player = new Player(this);
+        player = new Player(this, 64, 64);
 
         items = new Array<Item>(false,128);
 
@@ -158,6 +163,13 @@ public class PlayScreen implements Screen {
             spawner.update(dt);
         }
 
+        if(isHost) {
+            //socket.emit("pushUpdate",)
+        }
+        else {
+
+        }
+
         hud.update(dt);
 
         gamecam.position.x = player.b2body.getPosition().x;
@@ -219,10 +231,8 @@ public class PlayScreen implements Screen {
 
     public void connectSocket(){
         try{
-            System.out.println("I'm here.");
             socket = IO.socket("http://localhost:5432");
-            System.out.println(socket.connect());
-            System.out.println("I'm here too.");
+            socket.connect();
         }catch (Exception e){
             System.out.println(e);
         }
@@ -233,6 +243,16 @@ public class PlayScreen implements Screen {
             public void call(Object... args) {
                 Gdx.app.log("SocketIO","Connected");
             }
+        }).on("isHost", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    isHost = data.getBoolean("isHost");
+                }catch(JSONException e){
+                    Gdx.app.log("SocketIO", "Error checking host");
+                }
+            }
         }).on("socketID", new Emitter.Listener(){
             @Override
             public void call(Object... args) {
@@ -242,6 +262,25 @@ public class PlayScreen implements Screen {
                     Gdx.app.log("SocketIO", "My ID:" + id);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting ID");
+                }
+            }
+        }).on("listPlayers", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    JSONArray players = data.getJSONArray("players");
+                    for (int i = 0; i < players.length(); i++) {
+                        JSONObject player = players.getJSONObject(i);
+                        float x = (float) player.getDouble("x");
+                        float y = (float) player.getDouble("y");
+                        float velocity_x = (float) player.getDouble("velocity_x");
+                        float velocity_y = (float) player.getDouble("velocity_y");
+                        float hit_point = (float) player.getDouble("hit_point");
+                    }
+
+                }catch(JSONException e){
+                    Gdx.app.log("SocketIO", "Error getting players");
                 }
             }
         }).on("playerDisconnected", new Emitter.Listener() {
@@ -256,5 +295,6 @@ public class PlayScreen implements Screen {
                 }
             }
         });
+
     }
 }
