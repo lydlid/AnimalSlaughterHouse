@@ -140,7 +140,7 @@ public class Player extends Sprite {
 
     public State getState() {
         if(b2body.getLinearVelocity().y > 0)
-            return State.UP;=
+            return State.UP;
         else if(b2body.getLinearVelocity().y < 0)
             return State.DOWN;
         else
