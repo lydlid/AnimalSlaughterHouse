@@ -23,9 +23,9 @@ public class Player extends Sprite {
     private Animation playerUp;
     private Animation playerDown;
     private Animation playerLeft;
-    private  Animation playerRight;
+    private Animation playerRight;
     private float stateTimer;
-    private Integer playerDirection;//{ 0:DOWN , 1:LEFT , 2:UP , 3:RIGHT}
+    //private Integer playerDirection;//{ 0:DOWN , 1:LEFT , 2:UP , 3:RIGHT}
 
 
     public PlayScreen screen;
@@ -40,13 +40,14 @@ public class Player extends Sprite {
     private float attack_time = -1e10F;
     private float attack_time_segment = 1e10F;
 
-    public Player(PlayScreen screen) {
+    public Player(PlayScreen screen, float x, float y) {
         this.screen = screen;
         this.world = screen.getWorld();
         currentState = State.DOWN;
         previousState  = State.DOWN;
         stateTimer = 0;
-        playerDirection = 0;
+        //playerDirection = 0;
+        setPosition(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for(int i = 1; i < 4; i++){
@@ -83,7 +84,7 @@ public class Player extends Sprite {
 
     private void definePlayer() {
         BodyDef bdef = new BodyDef();
-        bdef.position.set(64 / ManifoldTravelers.PPM, 64 / ManifoldTravelers.PPM);
+        bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
 
         bdef.linearDamping = 10;
