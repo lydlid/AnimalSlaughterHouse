@@ -69,7 +69,7 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch);
 
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("l1.tmx");
+        map = mapLoader.load("tmp1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / ManifoldTravelers.PPM);
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
