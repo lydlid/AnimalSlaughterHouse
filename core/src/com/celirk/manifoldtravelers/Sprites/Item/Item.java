@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public abstract class Item extends Sprite {
     protected PlayScreen screen;
@@ -56,5 +58,20 @@ public abstract class Item extends Sprite {
 
     public void destroy(){
         toDestroy = true;
+    }
+
+    public JSONObject getJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("x", getX()*ManifoldTravelers.PPM);
+
+            jsonObject.put("y", getY()*ManifoldTravelers.PPM);
+            jsonObject.put("velocity_x", body.getLinearVelocity().x);
+            jsonObject.put("velocity_y", body.getLinearVelocity().y);
+            jsonObject.put("id", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

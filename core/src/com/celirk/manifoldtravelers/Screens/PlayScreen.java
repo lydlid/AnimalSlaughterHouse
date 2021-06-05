@@ -32,6 +32,10 @@ import org.json.JSONObject;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
 
@@ -56,11 +60,14 @@ public class PlayScreen implements Screen {
 
     private Player player;
 
-    private Array<Player> enemies;
+    private HashMap<String, Player> enemies;
 
     private Array<Item> items;
 
     private Array<Projectile> projectiles;
+
+    private final int update_every_n_frames = 5;
+    private int n_frames_without_update = update_every_n_frames;
 
     public PlayScreen(ManifoldTravelers game) {
         atlas = new TextureAtlas("animalWithBullet.pack");
@@ -86,7 +93,9 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
-        player = new Player(this, 64, 64);
+        player = new Player(this, 64f, 64f);
+
+        enemies = new HashMap<>();
 
         items = new Array<Item>(false,128);
 
@@ -119,6 +128,10 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         game.batch.begin();
         player.draw(game.batch);
+        for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+            entry.getValue().draw(game.batch);
+        }
+
         game.batch.end();
 
         hud.stage.draw();
@@ -151,6 +164,10 @@ public class PlayScreen implements Screen {
 
         player.update(dt);
 
+        for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+            entry.getValue().update(dt);
+        }
+
         for(Projectile projectile : projectiles){
             projectile.update(dt);
         }
@@ -162,12 +179,39 @@ public class PlayScreen implements Screen {
         for(Spawner spawner : creator.getSpawners()) {
             spawner.update(dt);
         }
+        n_frames_without_update++;
+        // need update with server
+        try {
+            //if (n_frames_without_update >= update_every_n_frames) {
+                if (isHost) {
+                    JSONObject jsonObject = new JSONObject();
 
-        if(isHost) {
-            //socket.emit("pushUpdate",)
-        }
-        else {
+                    JSONObject players_json = new JSONObject();
+                    players_json.put(player.getId(), player.getJson());
+                    for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+                        players_json.put(entry.getValue().getId(), entry.getValue().getJson());
+                    }
+                    jsonObject.put("players", players_json);
 
+                    JSONArray items_json = new JSONArray();
+                    for(Item item : items){
+                        items_json.put(item.getJson());
+                    }
+                    jsonObject.put("items", items_json);
+
+                    JSONArray projectiles_json = new JSONArray();
+                    for(Projectile projectile : projectiles){
+                        projectiles_json.put(projectile.getJson());
+                    }
+                    jsonObject.put("projectiles", projectiles_json);
+
+                    socket.emit("pushUpdate", jsonObject);
+                } else {
+                    socket.emit("requestUpdate");
+                }
+            //}
+        } catch (JSONException e) {
+            System.out.println(e);
         }
 
         hud.update(dt);
@@ -241,6 +285,7 @@ public class PlayScreen implements Screen {
         }
     }
     public void configSocketEvents(){
+        final PlayScreen screen = this;
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener(){
             @Override
             public void call(Object... args) {
@@ -252,6 +297,7 @@ public class PlayScreen implements Screen {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     isHost = data.getBoolean("isHost");
+                    System.out.println(isHost);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error checking host");
                 }
@@ -267,19 +313,27 @@ public class PlayScreen implements Screen {
                     Gdx.app.log("SocketIO", "Error getting ID");
                 }
             }
-        }).on("listPlayers", new Emitter.Listener() {
+        }).on("update", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try {
-                    JSONArray players = data.getJSONArray("players");
-                    for (int i = 0; i < players.length(); i++) {
-                        JSONObject player = players.getJSONObject(i);
+                    JSONObject players = data.getJSONObject("players");
+                    Iterator<String> keys = players.keys();
+                    System.out.println(data);
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+
+                        JSONObject player = players.getJSONObject(key);
                         float x = (float) player.getDouble("x");
                         float y = (float) player.getDouble("y");
                         float velocity_x = (float) player.getDouble("velocity_x");
                         float velocity_y = (float) player.getDouble("velocity_y");
                         float hit_point = (float) player.getDouble("hit_point");
+                        Player enemy = new Player(screen, x, y);
+                        enemy.setHitPoint(hit_point);
+                        enemy.setVelocity(velocity_x, velocity_y);
+                        enemies.put(key, enemy);
                     }
 
                 }catch(JSONException e){
@@ -292,7 +346,7 @@ public class PlayScreen implements Screen {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     String id = data.getString("id");
-                    Gdx.app.log("SocketIO", "New Player Connected:" + id);
+                    enemies.remove(id);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting New PlayerID");
                 }

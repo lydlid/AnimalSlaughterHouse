@@ -16,19 +16,23 @@ io.on('connection',  function(socket){
         host_id = socket.id;
     console.log("Player Connected!");
     // if there is no player in the server, make this client the host
-    socket.emit('isHost', { isHost : Object.keys(players).length !== 0 })
+    socket.emit('isHost', { isHost : Object.keys(players).length === 0 })
     // self id
     socket.emit('socketID', { id : socket.id });
     // tell client player list
-    socket.emit('listPlayers', { players : players });
-    // broadcasting self id to everybody else
     socket.broadcast.emit('newPlayer',{ id : socket.id });
+    // get host's update
     socket.on('pushUpdate', function(data){
         data.id = socket.id;
         players = data.players;
         items = data.items;
         projectiles = data.projectiles;
     });
+    // when client requests update from server
+    socket.on('requestUpdate', function(){
+        socket.emit('update', { players : players, items : items, projectiles : projectiles });
+    });
+
     // if client disconnects
     socket.on('disconnect', function(){
         console.log("Player Disconnected");

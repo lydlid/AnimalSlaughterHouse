@@ -11,6 +11,9 @@ import com.celirk.manifoldtravelers.Screens.PlayScreen;
 import com.celirk.manifoldtravelers.Sprites.Indicator.Indicator;
 import com.celirk.manifoldtravelers.Sprites.Projectile.PistolBullet;
 import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static java.lang.Math.abs;
 
@@ -39,6 +42,8 @@ public class Player extends Sprite {
 
     private float attack_time = -1e10F;
     private float attack_time_segment = 1e10F;
+
+    private String id;
 
     public Player(PlayScreen screen, float x, float y) {
         this.screen = screen;
@@ -104,7 +109,16 @@ public class Player extends Sprite {
     private void defineUtils() {
         weapon_on_hand = 0;
         hit_point = 100;
+        id = new String();
         //hp_indicator = new Indicator((int) getX(), (int) getY());
+    }
+
+    public void setHitPoint(float hit_point) {
+        this.hit_point = hit_point;
+    }
+
+    public void setVelocity(float x, float y) {
+        this.b2body.setLinearVelocity(x, y);
     }
 
     public void update(float dt) {
@@ -198,5 +212,29 @@ public class Player extends Sprite {
 
             b2body.applyLinearImpulse(direction.scl(-2), b2body.getWorldCenter(), true);
         }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public JSONObject getJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("x", getX()*ManifoldTravelers.PPM);
+
+        jsonObject.put("y", getY()*ManifoldTravelers.PPM);
+        jsonObject.put("velocity_x", b2body.getLinearVelocity().x);
+        jsonObject.put("velocity_y", b2body.getLinearVelocity().y);
+        jsonObject.put("hit_point", hit_point);
+        jsonObject.put("weapon_on_hand", weapon_on_hand);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }
