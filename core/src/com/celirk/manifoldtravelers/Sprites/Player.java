@@ -10,13 +10,17 @@ public class Player extends Sprite {
     public PlayScreen screen;
     public World world;
     public Body b2body;
+
     private int weapon_on_hand;
+
+    private float hit_point;
 
     public Player(PlayScreen screen) {
         this.screen = screen;
         this.world = screen.getWorld();
         definePlayer();
         weapon_on_hand = 0;
+        hit_point = 100;
     }
 
     public void definePlayer() {
