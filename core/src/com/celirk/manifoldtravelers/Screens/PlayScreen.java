@@ -63,7 +63,7 @@ public class PlayScreen implements Screen {
     private Array<Projectile> projectiles;
 
     public PlayScreen(ManifoldTravelers game) {
-        atlas = new TextureAtlas("playerMove.pack");
+        atlas = new TextureAtlas("animalWithBullet.pack");
 
         this.game = game;
 
@@ -227,6 +227,9 @@ public class PlayScreen implements Screen {
     }
     public void removeProjectile(Projectile projectile) {
         projectiles.removeValue(projectile, true);
+    }
+    public Array<Projectile> getProjectiles(){
+        return projectiles;
     }
 
     public void connectSocket(){

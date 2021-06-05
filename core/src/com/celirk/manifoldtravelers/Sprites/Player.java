@@ -111,6 +111,11 @@ public class Player extends Sprite {
         attack_time += dt;
         setPosition((float) (b2body.getPosition().x+(11.5)*getWidth()/2), b2body.getPosition().y + 6*getHeight()/2);
         setRegion(getFrame(dt));
+
+        for(Projectile ptile : screen.getProjectiles()){
+            ptile.update(dt);
+        }
+
     }
 
     public TextureRegion getFrame(float dt){
@@ -171,7 +176,6 @@ public class Player extends Sprite {
 
     public void hit(float delta_hp) {
         hit_point -= delta_hp;
-
     }
 
     public void shoot(float x, float y, float dt) {
