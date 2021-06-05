@@ -66,6 +66,9 @@ public class PlayScreen implements Screen {
 
     private Array<Projectile> projectiles;
 
+    private final int update_every_n_frames = 5;
+    private int n_frames_without_update = update_every_n_frames;
+
     public PlayScreen(ManifoldTravelers game) {
         atlas = new TextureAtlas("playerMove.pack");
 
@@ -176,12 +179,39 @@ public class PlayScreen implements Screen {
         for(Spawner spawner : creator.getSpawners()) {
             spawner.update(dt);
         }
+        n_frames_without_update++;
+        // need update with server
+        try {
+            if (n_frames_without_update >= update_every_n_frames) {
+                if (isHost) {
+                    JSONObject jsonObject = new JSONObject();
 
-        if(isHost) {
-            //socket.emit("pushUpdate",)
-        }
-        else {
+                    JSONObject players_json = new JSONObject();
+                    players_json.put(player.getId(), player.getJson());
+                    for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+                        players_json.put(entry.getValue().getId(), entry.getValue().getJson());
+                    }
+                    jsonObject.put("players", players_json);
 
+                    JSONArray items_json = new JSONArray();
+                    for(Item item : items){
+                        items_json.put(item.getJson());
+                    }
+                    jsonObject.put("items", items_json);
+
+                    JSONArray projectiles_json = new JSONArray();
+                    for(Projectile projectile : projectiles){
+                        projectiles_json.put(projectile.getJson());
+                    }
+                    jsonObject.put("projectiles", projectiles_json);
+
+                    socket.emit("pushUpdate", jsonObject);
+                } else {
+                    socket.emit("requestUpdate");
+                }
+            }
+        } catch (JSONException e) {
+            System.out.println(e);
         }
 
         hud.update(dt);
@@ -280,14 +310,14 @@ public class PlayScreen implements Screen {
                     Gdx.app.log("SocketIO", "Error getting ID");
                 }
             }
-        }).on("listPlayers", new Emitter.Listener() {
+        }).on("update", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     JSONObject players = data.getJSONObject("players");
                     Iterator<String> keys = players.keys();
-
+                    System.out.println(data);
                     while(keys.hasNext()) {
                         String key = keys.next();
 
@@ -301,8 +331,9 @@ public class PlayScreen implements Screen {
                         enemy.setHitPoint(hit_point);
                         enemy.setVelocity(velocity_x, velocity_y);
                         enemies.put(key, enemy);
-
                     }
+
+
 
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting players");

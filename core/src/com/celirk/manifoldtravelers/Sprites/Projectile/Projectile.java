@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public abstract class Projectile extends Sprite {
     protected PlayScreen screen;
@@ -57,5 +59,20 @@ public abstract class Projectile extends Sprite {
 
     public float getAttack() {
         return attack;
+    }
+
+    public JSONObject getJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("x", getX()*ManifoldTravelers.PPM);
+
+            jsonObject.put("y", getY()*ManifoldTravelers.PPM);
+            jsonObject.put("velocity_x", body.getLinearVelocity().x);
+            jsonObject.put("velocity_y", body.getLinearVelocity().y);
+            jsonObject.put("attack", attack);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }
