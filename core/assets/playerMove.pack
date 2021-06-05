@@ -1,0 +1,108 @@
+
+assets1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+play
+  rotate: false
+  xy: 2, 2
+  size: 720, 250
+  orig: 720, 250
+  offset: 0, 0
+  index: -1
+exit
+  rotate: false
+  xy: 2, 254
+  size: 540, 210
+  orig: 540, 210
+  offset: 0, 0
+  index: -1
+animals
+  rotate: false
+  xy: 2, 466
+  size: 288, 256
+  orig: 288, 256
+  offset: 0, 0
+  index: -1
+snake
+  rotate: false
+  xy: 2, 724
+  size: 192, 256
+  orig: 192, 256
+  offset: 0, 0
+  index: -1
+pig
+  rotate: false
+  xy: 292, 466
+  size: 192, 256
+  orig: 192, 256
+  offset: 0, 0
+  index: -1
+KFC2
+  rotate: false
+  xy: 292, 724
+  size: 192, 256
+  orig: 192, 256
+  offset: 0, 0
+  index: -1
+dog2
+  rotate: false
+  xy: 486, 466
+  size: 192, 256
+  orig: 192, 256
+  offset: 0, 0
+  index: -1
+PortalTiles
+  rotate: false
+  xy: 544, 254
+  size: 374, 68
+  orig: 374, 68
+  offset: 0, 0
+  index: -1
+sheep
+  rotate: false
+  xy: 724, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+KFC
+  rotate: false
+  xy: 854, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+dog
+  rotate: false
+  xy: 544, 324
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+cow
+  rotate: false
+  xy: 674, 324
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+
+assets2.png
+format: Alpha
+filter: Nearest,Nearest
+repeat: none
+play
+  rotate: false
+  xy: 2, 2
+  size: 720, 250
+  orig: 720, 250
+  offset: 0, 0
+  index: -1
+exit
+  rotate: false
+  xy: 2, 254
+  size: 540, 210
+  orig: 540, 210
+  offset: 0, 0
+  index: -1

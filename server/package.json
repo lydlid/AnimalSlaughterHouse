@@ -1,0 +1,23 @@
+{
+  "name": "manifoldtravelers",
+  "version": "1.0.0",
+  "description": "JavaFX Experimental Game. Now in development.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lydlid/ManifoldTravelers.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lydlid/ManifoldTravelers/issues"
+  },
+  "homepage": "https://github.com/lydlid/ManifoldTravelers#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.1.2"
+  }
+}

@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -30,6 +32,8 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 
 public class PlayScreen implements Screen {
+    private TextureAtlas atlas;
+
     private Socket socket;
 
     private ManifoldTravelers game;
@@ -54,6 +58,8 @@ public class PlayScreen implements Screen {
     private Array<Projectile> projectiles;
 
     public PlayScreen(ManifoldTravelers game) {
+        atlas = new TextureAtlas("playerMove.pack");
+
         this.game = game;
 
         gamecam = new OrthographicCamera();
@@ -85,6 +91,10 @@ public class PlayScreen implements Screen {
         configSocketEvents();
     }
 
+    public TextureAtlas getAtlas(){
+        return atlas;
+    }
+
     @Override
     public void show() {
 
@@ -102,6 +112,10 @@ public class PlayScreen implements Screen {
         b2dr.render(world, gamecam.combined);
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        game.batch.begin();
+        player.draw(game.batch);
+        game.batch.end();
+
         hud.stage.draw();
     }
 

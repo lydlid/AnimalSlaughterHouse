@@ -1,8 +1,11 @@
 package com.celirk.manifoldtravelers.Sprites;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
 import com.celirk.manifoldtravelers.Sprites.Indicator.Indicator;
@@ -10,6 +13,18 @@ import com.celirk.manifoldtravelers.Sprites.Projectile.PistolBullet;
 import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
 
 public class Player extends Sprite {
+    private TextureRegion playerMove;
+    public enum State { UP, DOWN, LEFT, RIGHT};
+    public State currentState;
+    public State previousState;
+    private Animation playerUp;
+    private Animation playerDown;
+    private Animation playerLeft;
+    private  Animation playerRight;
+    private float stateTimer;
+    private Integer playerDirection;//{ 0:DOWN , 1:LEFT , 2:UP , 3:RIGHT}
+
+
     public PlayScreen screen;
     public World world;
     public Body b2body;
@@ -23,10 +38,44 @@ public class Player extends Sprite {
     private float attack_time_segment = 1e10F;
 
     public Player(PlayScreen screen) {
+        super(screen.getAtlas().findRegion("cow"));
         this.screen = screen;
         this.world = screen.getWorld();
+        currentState = State.DOWN;
+        previousState  = State.DOWN;
+        stateTimer = 0;
+        playerDirection = 0;
+
+        Array<TextureRegion> frames = new Array<TextureRegion>();
+        for(int i = 1; i < 5; i++){
+            frames.add(new TextureRegion(getTexture(), i*32,0,32, 32));
+        }
+        playerUp = new Animation(0.1f, frames);
+        frames.clear();
+        for(int i = 1; i < 5; i++){
+            frames.add(new TextureRegion(getTexture(), i*32,32,32, 32));
+        }
+        playerLeft = new Animation(0.1f, frames);
+        frames.clear();
+        for(int i = 1; i < 5; i++){
+            frames.add(new TextureRegion(getTexture(), i*32,64,32, 32));
+        }
+        playerRight = new Animation(0.1f, frames);
+        frames.clear();
+        for(int i = 1; i < 5; i++){
+            frames.add(new TextureRegion(getTexture(), i*32,96,32, 32));
+        }
+        playerDown = new Animation(0.1f, frames);
+
+        playerMove = new TextureRegion(getTexture(), 0,0,32,32);
+
         definePlayer();
         defineUtils();
+
+        setBounds(0,0,32 / ManifoldTravelers.PPM,32 / ManifoldTravelers.PPM);
+        setRegion(playerMove);
+
+
     }
 
     private void definePlayer() {
@@ -39,7 +88,7 @@ public class Player extends Sprite {
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
-        CircleShape shape = new CircleShape();
+        CircleShape shape = new CircleShape();//circle shape
         shape.setRadius(5 / ManifoldTravelers.PPM);
 
         fdef.shape = shape;
@@ -56,8 +105,52 @@ public class Player extends Sprite {
 
     public void update(float dt) {
         attack_time += dt;
+        setPosition(b2body.getPosition().x-getWidth()/2, b2body.getPosition().y - getHeight()/2);
+        setRegion(getFrame(dt));
     }
 
+    public TextureRegion getFrame(float dt){
+        currentState = getState();
+
+        TextureRegion region;
+        switch (currentState){
+            case DOWN:
+                region = (TextureRegion) playerDown.getKeyFrame(stateTimer, true);
+                break;
+            case UP:
+                region = (TextureRegion) playerUp.getKeyFrame(stateTimer, true);
+                break;
+            case LEFT:
+                region = (TextureRegion) playerLeft.getKeyFrame(stateTimer, true);
+                break;
+            case RIGHT:
+                region = (TextureRegion) playerRight.getKeyFrame(stateTimer, true);
+                break;
+            default:
+                region = (TextureRegion) playerDown.getKeyFrame(stateTimer);
+                break;
+        }
+
+        //if((b2body.getLinearVelocity().x < 0)) //咱有四个方向的图，不需要flip
+
+        stateTimer = currentState == previousState ? stateTimer + dt : 0;
+        previousState = currentState;
+        return region;
+    }
+
+    public State getState() {
+        if(b2body.getLinearVelocity().y > 0)
+            return State.UP;=
+        else if(b2body.getLinearVelocity().y < 0)
+            return State.DOWN;
+        else
+            if(b2body.getLinearVelocity().x > 0)
+                return State.RIGHT;
+            else if(b2body.getLinearVelocity().x < 0)
+                return State.LEFT;
+            else
+                return State.DOWN;//没速度时默认朝下
+    }
     public void acquireItem(int id) {
         switch (id){
             case 1:
