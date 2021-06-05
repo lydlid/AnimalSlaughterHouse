@@ -34,6 +34,7 @@ import io.socket.client.Socket;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
@@ -90,6 +91,8 @@ public class PlayScreen implements Screen {
         world.setContactListener(new WorldContactListener());
 
         player = new Player(this, 64f, 64f);
+
+        enemies = new HashMap<>();
 
         items = new Array<Item>(false,128);
 
@@ -153,6 +156,10 @@ public class PlayScreen implements Screen {
         world.step(dt, 6, 2);
 
         player.update(dt);
+
+        for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+            entry.getValue().update(dt);
+        }
 
         for(Projectile projectile : projectiles){
             projectile.update(dt);
@@ -290,6 +297,7 @@ public class PlayScreen implements Screen {
                         enemy.setHitPoint(hit_point);
                         enemy.setVelocity(velocity_x, velocity_y);
                         enemies.put(key, enemy);
+
                     }
 
                 }catch(JSONException e){

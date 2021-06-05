@@ -16,7 +16,7 @@ io.on('connection',  function(socket){
         host_id = socket.id;
     console.log("Player Connected!");
     // if there is no player in the server, make this client the host
-    socket.emit('isHost', { isHost : Object.keys(players).length !== 0 })
+    socket.emit('isHost', { isHost : Object.keys(players).length === 0 })
     // self id
     socket.emit('socketID', { id : socket.id });
     // tell client player list
