@@ -1,0 +1,68 @@
+
+animalMove1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+snake
+  rotate: false
+  xy: 2, 2
+  size: 192, 256
+  orig: 192, 256
+  offset: 0, 0
+  index: -1
+pig
+  rotate: false
+  xy: 196, 2
+  size: 192, 256
+  orig: 192, 256
+  offset: 0, 0
+  index: -1
+KFC2
+  rotate: false
+  xy: 2, 260
+  size: 192, 256
+  orig: 192, 256
+  offset: 0, 0
+  index: -1
+dog2
+  rotate: false
+  xy: 196, 260
+  size: 192, 256
+  orig: 192, 256
+  offset: 0, 0
+  index: -1
+sheep
+  rotate: false
+  xy: 2, 518
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+KFC
+  rotate: false
+  xy: 2, 648
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+dog
+  rotate: false
+  xy: 2, 778
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+cow
+  rotate: false
+  xy: 132, 518
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+bullet
+  rotate: false
+  xy: 390, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
