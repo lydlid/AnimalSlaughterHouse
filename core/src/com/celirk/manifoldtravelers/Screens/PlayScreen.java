@@ -182,7 +182,7 @@ public class PlayScreen implements Screen {
         n_frames_without_update++;
         // need update with server
         try {
-            if (n_frames_without_update >= update_every_n_frames) {
+            //if (n_frames_without_update >= update_every_n_frames) {
                 if (isHost) {
                     JSONObject jsonObject = new JSONObject();
 
@@ -209,7 +209,7 @@ public class PlayScreen implements Screen {
                 } else {
                     socket.emit("requestUpdate");
                 }
-            }
+            //}
         } catch (JSONException e) {
             System.out.println(e);
         }
@@ -332,8 +332,6 @@ public class PlayScreen implements Screen {
                         enemy.setVelocity(velocity_x, velocity_y);
                         enemies.put(key, enemy);
                     }
-
-
 
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting players");
