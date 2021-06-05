@@ -18,6 +18,7 @@ import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Scenes.Hud;
 import com.celirk.manifoldtravelers.Sprites.Item.Item;
 import com.celirk.manifoldtravelers.Sprites.Player;
+import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
 import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
 import com.celirk.manifoldtravelers.Utils.WorldContactListener;
@@ -41,6 +42,8 @@ public class PlayScreen implements Screen {
     private B2WorldCreator creator;
 
     private Array<Item> items;
+
+    private Array<Projectile> projectiles;
 
     public PlayScreen(ManifoldTravelers game) {
         this.game = game;
@@ -66,7 +69,9 @@ public class PlayScreen implements Screen {
 
         player = new Player(this);
 
-        items = new Array<Item>();
+        items = new Array<Item>(false,128);
+
+        projectiles = new Array<Projectile>(false, 128);
     }
 
     @Override
@@ -102,14 +107,23 @@ public class PlayScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.A) && player.b2body.getLinearVelocity().x >= -2)
             player.b2body.applyLinearImpulse(new Vector2(-0.2f, 0), player.b2body.getWorldCenter(), true);
 
-
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+            player.shoot(Gdx.input.getX() - gamePort.getScreenWidth() / 2,
+                    Gdx.graphics.getHeight() - Gdx.input.getY() - gamePort.getScreenHeight() / 2,
+                    delta);
     }
 
     public void update(float dt) {
-        // dt := delta time
+        // dt == delta time
         handleInput(dt);
 
         world.step(dt, 6, 2);
+
+        player.update(dt);
+
+        for(Projectile projectile : projectiles){
+            projectile.update(dt);
+        }
 
         for(Item item : items){
             item.update(dt);
@@ -167,5 +181,14 @@ public class PlayScreen implements Screen {
 
     public void appendItem(Item item) {
         items.add(item);
+    }
+    public void removeItem(Item item) {
+        items.removeValue(item,true);
+    }
+    public void appendProjectile(Projectile projectile) {
+        projectiles.add(projectile);
+    }
+    public void removeProjectile(Projectile projectile) {
+        projectiles.removeValue(projectile, true);
     }
 }

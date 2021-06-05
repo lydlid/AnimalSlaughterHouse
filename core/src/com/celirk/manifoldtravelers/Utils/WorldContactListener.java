@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Sprites.Item.Item;
 import com.celirk.manifoldtravelers.Sprites.Player;
+import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
 import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 
 public class WorldContactListener implements ContactListener {
@@ -33,7 +34,24 @@ public class WorldContactListener implements ContactListener {
                     ((Spawner) fixB.getUserData()).setOccupied(true);
                 }
                 break;
-
+            case  ManifoldTravelers.CATEGORY_PROJECTILE | ManifoldTravelers.CATEGORY_PLAYER:
+                if(fixA.getFilterData().categoryBits == ManifoldTravelers.CATEGORY_PLAYER) {
+                    ((Player) fixA.getUserData()).hit(((Projectile) fixB.getUserData()).getAttack());
+                    ((Projectile) fixB.getUserData()).destroy();
+                }
+                else {
+                    ((Player) fixB.getUserData()).hit(((Projectile) fixA.getUserData()).getAttack());
+                    ((Projectile) fixA.getUserData()).destroy();
+                }
+                break;
+            case  ManifoldTravelers.CATEGORY_PROJECTILE | ManifoldTravelers.CATEGORY_GROUND:
+                if(fixA.getFilterData().categoryBits == ManifoldTravelers.CATEGORY_PROJECTILE) {
+                    ((Projectile) fixA.getUserData()).destroy();
+                }
+                else {
+                    ((Projectile) fixB.getUserData()).destroy();
+                }
+                break;
         }
 
     }

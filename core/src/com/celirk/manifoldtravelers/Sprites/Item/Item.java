@@ -46,6 +46,7 @@ public abstract class Item extends Sprite {
         if(toDestroy && !destroyed){
             world.destroyBody(body);
             destroyed = true;
+            screen.removeItem(this);
         }
     }
 

@@ -6,6 +6,7 @@ import com.celirk.manifoldtravelers.Sprites.Item.Item;
 public class Pistol extends Item {
     public Pistol(PlayScreen screen, float x, float y) {
         super(screen, x, y);
+        id = 1;
     }
 
     @Override
