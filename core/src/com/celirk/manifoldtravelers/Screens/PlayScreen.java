@@ -125,6 +125,10 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         game.batch.begin();
         player.draw(game.batch);
+        for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+            entry.getValue().draw(game.batch);
+        }
+
         game.batch.end();
 
         hud.stage.draw();
