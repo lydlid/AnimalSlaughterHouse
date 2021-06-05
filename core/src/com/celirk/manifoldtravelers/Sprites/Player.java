@@ -12,11 +12,14 @@ import com.celirk.manifoldtravelers.Sprites.Indicator.Indicator;
 import com.celirk.manifoldtravelers.Sprites.Projectile.PistolBullet;
 import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
 
+import static java.lang.Math.abs;
+
 public class Player extends Sprite {
     private TextureRegion playerMove;
-    public enum State { UP, DOWN, LEFT, RIGHT};
+    public enum State { UP, DOWN, LEFT, RIGHT, STAND};
     public State currentState;
     public State previousState;
+    private TextureRegion playerStand;
     private Animation playerUp;
     private Animation playerDown;
     private Animation playerLeft;
@@ -65,6 +68,8 @@ public class Player extends Sprite {
             frames.add(new TextureRegion(screen.getAtlas().findRegion("dog"), i*32,96,32, 32));
         }
         playerUp = new Animation(0.1f, frames);
+
+        playerStand = new TextureRegion(screen.getAtlas().findRegion("dog"),32,0,32,32);
 
         playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
@@ -129,7 +134,6 @@ public class Player extends Sprite {
                 break;
         }
 
-        //if((b2body.getLinearVelocity().x < 0)) //咱有四个方向的图，不需要flip
 
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
         previousState = currentState;
@@ -137,18 +141,24 @@ public class Player extends Sprite {
     }
 
     public State getState() {
-        if(b2body.getLinearVelocity().x > 0)
-            return State.RIGHT;
-        else if(b2body.getLinearVelocity().x < 0)
-            return State.LEFT;
-        else
+        if(abs(b2body.getLinearVelocity().x) > abs(b2body.getLinearVelocity().y)){
+            if(b2body.getLinearVelocity().x > 0)
+                return State.RIGHT;
+            else if(b2body.getLinearVelocity().x <= 0)
+                return State.LEFT;
+        }
+        else if(abs(b2body.getLinearVelocity().x) < abs(b2body.getLinearVelocity().y)){
             if(b2body.getLinearVelocity().y > 0)
                 return State.UP;
-            else if(b2body.getLinearVelocity().y < 0)
+            else if(b2body.getLinearVelocity().y <= 0)
                 return State.DOWN;
-            else
-                return State.DOWN;//没速度时默认朝下
+        }
+        else if(b2body.getLinearVelocity().x == 0 &&b2body.getLinearVelocity().y == 0){
+            return State.STAND;
+        }
+        return State.STAND;
     }
+
     public void acquireItem(int id) {
         switch (id){
             case 1:
