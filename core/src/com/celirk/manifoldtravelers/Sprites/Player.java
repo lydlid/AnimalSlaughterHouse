@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
+import com.celirk.manifoldtravelers.Sprites.Indicator.Indicator;
 
 public class Player extends Sprite {
     public PlayScreen screen;
@@ -14,16 +15,16 @@ public class Player extends Sprite {
     private int weapon_on_hand;
 
     private float hit_point;
+    private Indicator hp_indicator;
 
     public Player(PlayScreen screen) {
         this.screen = screen;
         this.world = screen.getWorld();
         definePlayer();
-        weapon_on_hand = 0;
-        hit_point = 100;
+        defineUtils();
     }
 
-    public void definePlayer() {
+    private void definePlayer() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(64 / ManifoldTravelers.PPM, 64 / ManifoldTravelers.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -42,10 +43,20 @@ public class Player extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
     }
 
+    private void defineUtils() {
+        weapon_on_hand = 0;
+        hit_point = 100;
+        hp_indicator = new Indicator((int) getX(), (int) getY());
+    }
+
     public void acquireItem(int id) {
         if(id == 0){
             weapon_on_hand = 0;
             this.b2body.applyLinearImpulse(new Vector2(0.1f,0),this.b2body.getWorldCenter(), true);
         }
+    }
+
+    public void hit(float delta_hp) {
+        hit_point -= delta_hp;
     }
 }
