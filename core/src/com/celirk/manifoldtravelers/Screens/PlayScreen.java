@@ -22,8 +22,16 @@ import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
 import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
 import com.celirk.manifoldtravelers.Utils.WorldContactListener;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import org.json.JSONException;
+import org.json.JSONObject;
+import io.socket.client.IO;
+import io.socket.client.Socket;
 
 public class PlayScreen implements Screen {
+    private Socket socket;
+
     private ManifoldTravelers game;
 
     private OrthographicCamera gamecam;
@@ -72,6 +80,9 @@ public class PlayScreen implements Screen {
         items = new Array<Item>(false,128);
 
         projectiles = new Array<Projectile>(false, 128);
+
+        connectSocket();
+        configSocketEvents();
     }
 
     @Override
@@ -190,5 +201,46 @@ public class PlayScreen implements Screen {
     }
     public void removeProjectile(Projectile projectile) {
         projectiles.removeValue(projectile, true);
+    }
+
+    public void connectSocket(){
+        try{
+            System.out.println("I'm here.");
+            socket = IO.socket("http://localhost:5432");
+            System.out.println(socket.connect());
+            System.out.println("I'm here too.");
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+    public void configSocketEvents(){
+        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener(){
+            @Override
+            public void call(Object... args) {
+                Gdx.app.log("SocketIO","Connected");
+            }
+        }).on("socketID", new Emitter.Listener(){
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    String id = data.getString("id");
+                    Gdx.app.log("SocketIO", "My ID:" + id);
+                }catch(JSONException e){
+                    Gdx.app.log("SocketIO", "Error getting ID");
+                }
+            }
+        }).on("playerDisconnected", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    String id = data.getString("id");
+                    Gdx.app.log("SocketIO", "New Player Connected:" + id);
+                }catch(JSONException e){
+                    Gdx.app.log("SocketIO", "Error getting New PlayerID");
+                }
+            }
+        });
     }
 }
