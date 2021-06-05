@@ -1,3 +1,2 @@
 # ManifoldTravelers
-
-JavaFX Experimental Game. Now in development.
+libgdx Experimental Game. Thanks for God we are finally in development, or we won't get bananas.
