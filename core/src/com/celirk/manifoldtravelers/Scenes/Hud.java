@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 
+import static java.lang.Math.round;
+
 public class Hud implements Disposable {
     public Stage stage;
     Label countdownLabel;
@@ -52,6 +54,6 @@ public class Hud implements Disposable {
 
     public void update(float dt){
 
-        FPSLabel.setText(String.format("FPS: %2f", 1 / dt));
+        FPSLabel.setText(String.format("FPS: %2d", round(1 / dt)));
     }
 }

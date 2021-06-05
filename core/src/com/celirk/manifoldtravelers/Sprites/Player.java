@@ -107,6 +107,14 @@ public class Player extends Sprite {
         //hp_indicator = new Indicator((int) getX(), (int) getY());
     }
 
+    public void setHitPoint(float hit_point) {
+        this.hit_point = hit_point;
+    }
+
+    public void setVelocity(float x, float y) {
+        this.b2body.setLinearVelocity(x, y);
+    }
+
     public void update(float dt) {
         attack_time += dt;
         setPosition((float) (b2body.getPosition().x+(11.5)*getWidth()/2), b2body.getPosition().y + 6*getHeight()/2);

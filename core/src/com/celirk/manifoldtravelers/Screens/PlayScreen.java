@@ -32,6 +32,9 @@ import org.json.JSONObject;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
 
@@ -56,7 +59,7 @@ public class PlayScreen implements Screen {
 
     private Player player;
 
-    private Array<Player> enemies;
+    private HashMap<String, Player> enemies;
 
     private Array<Item> items;
 
@@ -86,7 +89,7 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
 
-        player = new Player(this, 64, 64);
+        player = new Player(this, 64f, 64f);
 
         items = new Array<Item>(false,128);
 
@@ -238,6 +241,7 @@ public class PlayScreen implements Screen {
         }
     }
     public void configSocketEvents(){
+        final PlayScreen screen = this;
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener(){
             @Override
             public void call(Object... args) {
@@ -249,6 +253,7 @@ public class PlayScreen implements Screen {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     isHost = data.getBoolean("isHost");
+                    System.out.println(isHost);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error checking host");
                 }
@@ -269,14 +274,22 @@ public class PlayScreen implements Screen {
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
                 try {
-                    JSONArray players = data.getJSONArray("players");
-                    for (int i = 0; i < players.length(); i++) {
-                        JSONObject player = players.getJSONObject(i);
+                    JSONObject players = data.getJSONObject("players");
+                    Iterator<String> keys = players.keys();
+
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+
+                        JSONObject player = players.getJSONObject(key);
                         float x = (float) player.getDouble("x");
                         float y = (float) player.getDouble("y");
                         float velocity_x = (float) player.getDouble("velocity_x");
                         float velocity_y = (float) player.getDouble("velocity_y");
                         float hit_point = (float) player.getDouble("hit_point");
+                        Player enemy = new Player(screen, x, y);
+                        enemy.setHitPoint(hit_point);
+                        enemy.setVelocity(velocity_x, velocity_y);
+                        enemies.put(key, enemy);
                     }
 
                 }catch(JSONException e){
@@ -289,7 +302,7 @@ public class PlayScreen implements Screen {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     String id = data.getString("id");
-                    Gdx.app.log("SocketIO", "New Player Connected:" + id);
+                    enemies.remove(id);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting New PlayerID");
                 }
