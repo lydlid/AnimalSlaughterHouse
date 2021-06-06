@@ -74,4 +74,8 @@ public abstract class Item extends Sprite {
         }
         return jsonObject;
     }
+
+    public void setVelocity(float x, float y) {
+        body.setLinearVelocity(x, y);
+    }
 }

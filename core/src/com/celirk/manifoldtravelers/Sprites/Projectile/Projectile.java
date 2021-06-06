@@ -19,6 +19,8 @@ public abstract class Projectile extends Sprite {
 
     protected float attack;
 
+    protected int id;
+
     public Projectile(PlayScreen screen, float x, float y, Vector2 velocity) {
         this.screen = screen;
         this.world = screen.getWorld();

@@ -204,10 +204,13 @@ public class Player extends Sprite {
             velocity.nor();
             velocity.scl(5);
 
-            screen.appendProjectile(new PistolBullet(screen,
+            Projectile projectile = new PistolBullet(screen,
                     b2body.getPosition().x + direction.x,
                     b2body.getPosition().y + direction.y,
-                    velocity.add(b2body.getLinearVelocity())));
+                    velocity.add(b2body.getLinearVelocity()));
+
+            screen.appendProjectile(projectile);
+            screen.getSocket().newProjectile(projectile.getJson());
             attack_time = -attack_time_segment;
 
             b2body.applyLinearImpulse(direction.scl(-2), b2body.getWorldCenter(), true);
@@ -222,16 +225,28 @@ public class Player extends Sprite {
         this.id = id;
     }
 
-    public JSONObject getJson() {
+    public void setWeapon_on_hand(int weapon_on_hand) {
+        this.weapon_on_hand = weapon_on_hand;
+    }
+
+    public JSONObject getJsonBox2d() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("x", getX()*ManifoldTravelers.PPM);
+            jsonObject.put("y", getY()*ManifoldTravelers.PPM);
+            jsonObject.put("velocity_x", b2body.getLinearVelocity().x);
+            jsonObject.put("velocity_y", b2body.getLinearVelocity().y);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
 
-        jsonObject.put("y", getY()*ManifoldTravelers.PPM);
-        jsonObject.put("velocity_x", b2body.getLinearVelocity().x);
-        jsonObject.put("velocity_y", b2body.getLinearVelocity().y);
-        jsonObject.put("hit_point", hit_point);
-        jsonObject.put("weapon_on_hand", weapon_on_hand);
+    public JSONObject getJsonAttribute() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("hit_point", hit_point);
+            jsonObject.put("weapon_on_hand", weapon_on_hand);
         } catch (JSONException e) {
             e.printStackTrace();
         }

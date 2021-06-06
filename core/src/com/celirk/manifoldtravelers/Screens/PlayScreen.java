@@ -23,6 +23,7 @@ import com.celirk.manifoldtravelers.Sprites.Player;
 import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
 import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
+import com.celirk.manifoldtravelers.Utils.GameSocket;
 import com.celirk.manifoldtravelers.Utils.WorldContactListener;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -39,7 +40,7 @@ import java.util.Map;
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
 
-    private Socket socket;
+    GameSocket socket;
 
     private boolean isHost;
 
@@ -81,7 +82,7 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch);
 
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("tmp1.tmx");
+        map = mapLoader.load("l1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / ManifoldTravelers.PPM);
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
@@ -92,8 +93,8 @@ public class PlayScreen implements Screen {
         creator = new B2WorldCreator(this);
 
         world.setContactListener(new WorldContactListener());
-
-        player = new Player(this, 64f, 64f);
+        // temp player
+        player = new Player(this, 128f, 128f);
 
         enemies = new HashMap<>();
 
@@ -101,8 +102,7 @@ public class PlayScreen implements Screen {
 
         projectiles = new Array<Projectile>(false, 128);
 
-        connectSocket();
-        configSocketEvents();
+        socket = new GameSocket(this);
     }
 
     public TextureAtlas getAtlas(){
@@ -159,59 +159,35 @@ public class PlayScreen implements Screen {
     public void update(float dt) {
         // dt == delta time
         handleInput(dt);
-
+        // maybe useless for slaves?
         world.step(dt, 6, 2);
 
         player.update(dt);
 
-        for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
-            entry.getValue().update(dt);
-        }
 
-        for(Projectile projectile : projectiles){
-            projectile.update(dt);
-        }
+        //n_frames_without_update++;
+        // update with server
+        if (isHost) {
 
-        for(Item item : items){
-            item.update(dt);
-        }
+            for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+                entry.getValue().update(dt);
+            }
 
-        for(Spawner spawner : creator.getSpawners()) {
-            spawner.update(dt);
-        }
-        n_frames_without_update++;
-        // need update with server
-        try {
-            //if (n_frames_without_update >= update_every_n_frames) {
-                if (isHost) {
-                    JSONObject jsonObject = new JSONObject();
+            for(Projectile projectile : projectiles){
+                projectile.update(dt);
+            }
 
-                    JSONObject players_json = new JSONObject();
-                    players_json.put(player.getId(), player.getJson());
-                    for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
-                        players_json.put(entry.getValue().getId(), entry.getValue().getJson());
-                    }
-                    jsonObject.put("players", players_json);
+            for(Item item : items){
+                item.update(dt);
+            }
 
-                    JSONArray items_json = new JSONArray();
-                    for(Item item : items){
-                        items_json.put(item.getJson());
-                    }
-                    jsonObject.put("items", items_json);
+            for(Spawner spawner : creator.getSpawners()) {
+                spawner.update(dt);
+            }
 
-                    JSONArray projectiles_json = new JSONArray();
-                    for(Projectile projectile : projectiles){
-                        projectiles_json.put(projectile.getJson());
-                    }
-                    jsonObject.put("projectiles", projectiles_json);
-
-                    socket.emit("pushUpdate", jsonObject);
-                } else {
-                    socket.emit("requestUpdate");
-                }
-            //}
-        } catch (JSONException e) {
-            System.out.println(e);
+            socket.hostUpdate();
+        } else {
+            socket.slaveUpdate();
         }
 
         hud.update(dt);
@@ -272,86 +248,30 @@ public class PlayScreen implements Screen {
     public void removeProjectile(Projectile projectile) {
         projectiles.removeValue(projectile, true);
     }
-    public Array<Projectile> getProjectiles(){
+
+    public HashMap<String, Player> getEnemies() {
+        return enemies;
+    }
+
+    public Array<Item> getItems() {
+        return items;
+    }
+
+    public Array<Projectile> getProjectiles() {
         return projectiles;
     }
 
-    public void connectSocket(){
-        try{
-            socket = IO.socket("http://localhost:5432");
-            socket.connect();
-        }catch (Exception e){
-            System.out.println(e);
-        }
+    public void setPlayer(Player player) {
+        this.player = player;
     }
-    public void configSocketEvents(){
-        final PlayScreen screen = this;
-        socket.on(Socket.EVENT_CONNECT, new Emitter.Listener(){
-            @Override
-            public void call(Object... args) {
-                Gdx.app.log("SocketIO","Connected");
-            }
-        }).on("isHost", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                try {
-                    isHost = data.getBoolean("isHost");
-                    System.out.println(isHost);
-                }catch(JSONException e){
-                    Gdx.app.log("SocketIO", "Error checking host");
-                }
-            }
-        }).on("socketID", new Emitter.Listener(){
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                try {
-                    String id = data.getString("id");
-                    Gdx.app.log("SocketIO", "My ID:" + id);
-                }catch(JSONException e){
-                    Gdx.app.log("SocketIO", "Error getting ID");
-                }
-            }
-        }).on("update", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                try {
-                    JSONObject players = data.getJSONObject("players");
-                    Iterator<String> keys = players.keys();
-                    System.out.println(data);
-                    while(keys.hasNext()) {
-                        String key = keys.next();
 
-                        JSONObject player = players.getJSONObject(key);
-                        float x = (float) player.getDouble("x");
-                        float y = (float) player.getDouble("y");
-                        float velocity_x = (float) player.getDouble("velocity_x");
-                        float velocity_y = (float) player.getDouble("velocity_y");
-                        float hit_point = (float) player.getDouble("hit_point");
-                        Player enemy = new Player(screen, x, y);
-                        enemy.setHitPoint(hit_point);
-                        enemy.setVelocity(velocity_x, velocity_y);
-                        enemies.put(key, enemy);
-                    }
+    public Player getPlayer() {
+        return player;
+    }
 
-                }catch(JSONException e){
-                    Gdx.app.log("SocketIO", "Error getting players");
-                }
-            }
-        }).on("playerDisconnected", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                try {
-                    String id = data.getString("id");
-                    enemies.remove(id);
-                }catch(JSONException e){
-                    Gdx.app.log("SocketIO", "Error getting New PlayerID");
-                }
-            }
-        });
 
+
+    public GameSocket getSocket() {
+        return socket;
     }
 }

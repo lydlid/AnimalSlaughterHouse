@@ -27,5 +27,6 @@ public class PistolBullet extends Projectile {
         //System.out.println("I'm here!!!!!");
         setPosition((float) (body.getPosition().x+(11.5)*getWidth()/2),body.getPosition().y+ 6*getHeight()/2);
         setRegion(bulletPic);
+        id = 1;
     }
 }

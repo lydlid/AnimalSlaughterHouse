@@ -21,19 +21,19 @@ public class B2WorldCreator {
         Body body;
         TiledMap map = screen.getMap();
 
-        for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
 
             new Ground(screen, object);
         }
 
-        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
 
             new Portalable(screen, object);
         }
 
         spawners = new Array<Spawner>();
 
-        for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
 
             spawners.add(new WeaponSpawner(screen, object));
         }
