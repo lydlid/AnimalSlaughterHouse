@@ -82,8 +82,7 @@ function item(x, y, velocity_x, velocity_y, id){
     this.id = id;
 }
 
-function projectile(x, y, velocity_x, velocity_y, attack){
+function projectile(x, y, velocity_x, velocity_y){
     virtual_entity.call(x, y, velocity_x, velocity_y);
     this.id = id;
-    this.attack = attack;
 }

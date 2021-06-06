@@ -33,10 +33,6 @@ public class GameSocket {
         socket.emit("requestWorld");
     }
 
-    public boolean isHost() {
-        return isHost;
-    }
-
     public void connectSocket(){
         try{
             socket = IO.socket("http://localhost:5432");
@@ -81,7 +77,6 @@ public class GameSocket {
                     JSONObject players_box2d = data.getJSONObject("players_box2d");
                     JSONObject players_attribute = data.getJSONObject("players_attribute");
                     Iterator<String> keys = players_box2d.keys();
-                    //System.out.println(data);
                     while(keys.hasNext()) {
                         String key = keys.next();
                         JSONObject player_box2d = players_box2d.getJSONObject(key);
@@ -132,7 +127,6 @@ public class GameSocket {
                         float y = (float) projectiles_.getDouble("y");
                         float velocity_x = (float) projectiles_.getDouble("velocity_x");
                         float velocity_y = (float) projectiles_.getDouble("velocity_y");
-                        float attack = (float) projectiles_.getDouble("attack");
                         int id = projectiles_.getInt("id");
                         Projectile projectile;
                         switch (id) {
@@ -278,4 +272,7 @@ public class GameSocket {
         socket.emit("newProjectile", json);
     }
 
+    public boolean isHost() {
+        return isHost;
+    }
 }

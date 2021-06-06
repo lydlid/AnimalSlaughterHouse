@@ -40,9 +40,7 @@ import java.util.Map;
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
 
-    GameSocket socket;
-
-    private boolean isHost;
+    private GameSocket socket;
 
     private ManifoldTravelers game;
 
@@ -172,7 +170,7 @@ public class PlayScreen implements Screen {
 
         //n_frames_without_update++;
         // update with server
-        if (isHost) {
+        if (socket.isHost()) {
 
             for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
                 entry.getValue().update(dt);
@@ -188,6 +186,7 @@ public class PlayScreen implements Screen {
 
             for(Spawner spawner : creator.getSpawners()) {
                 spawner.update(dt);
+
             }
 
             socket.hostUpdate();
