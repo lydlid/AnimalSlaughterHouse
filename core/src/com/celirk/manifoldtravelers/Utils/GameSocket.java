@@ -73,6 +73,7 @@ public class GameSocket {
             @Override
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
+                System.out.println(data);
                 try {
                     JSONObject players_box2d = data.getJSONObject("players_box2d");
                     JSONObject players_attribute = data.getJSONObject("players_attribute");

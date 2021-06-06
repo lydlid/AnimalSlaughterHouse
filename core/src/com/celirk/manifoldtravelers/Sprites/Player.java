@@ -50,7 +50,8 @@ public class Player extends Sprite {
         previousState  = State.DOWN;
         stateTimer = 0;
         //playerDirection = 0;
-        setPosition(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
+        //setPosition(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
+
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for(int i = 1; i < 4; i++){
@@ -77,7 +78,8 @@ public class Player extends Sprite {
 
         playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
-        definePlayer();
+
+        definePlayer(x, y);
         defineUtils();
 
         setBounds(0,0,32,32);
@@ -85,9 +87,9 @@ public class Player extends Sprite {
 
     }
 
-    private void definePlayer() {
+    private void definePlayer(float x, float y) {
         BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
+        bdef.position.set(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
 
         bdef.linearDamping = 10;
@@ -123,9 +125,9 @@ public class Player extends Sprite {
         setPosition((float) (b2body.getPosition().x+(11.5)*getWidth()/2), b2body.getPosition().y + 6*getHeight()/2);
         setRegion(getFrame(dt));
 
-        for(Projectile ptile : screen.getProjectiles()){
-            ptile.update(dt);
-        }
+//        for(Projectile ptile : screen.getProjectiles()){
+//            ptile.update(dt);
+//        }
 
     }
 
@@ -221,8 +223,9 @@ public class Player extends Sprite {
     public JSONObject getJsonBox2d() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("x", getX()*ManifoldTravelers.PPM);
-            jsonObject.put("y", getY()*ManifoldTravelers.PPM);
+            //System.out.println(getX());
+            jsonObject.put("x", b2body.getPosition().x * ManifoldTravelers.PPM);
+            jsonObject.put("y", b2body.getPosition().y * ManifoldTravelers.PPM);
             jsonObject.put("velocity_x", b2body.getLinearVelocity().x);
             jsonObject.put("velocity_y", b2body.getLinearVelocity().y);
         } catch (JSONException e) {
@@ -243,7 +246,6 @@ public class Player extends Sprite {
     }
 
     public void setPos(float x, float y) {
-        setPosition(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
-        b2body.setTransform(getX(),getY(),0);
+        b2body.setTransform(x / ManifoldTravelers.PPM,y / ManifoldTravelers.PPM,0);
     }
 }

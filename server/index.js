@@ -6,6 +6,7 @@ const io = require('socket.io')(server);
 let players_box2d = {};
 // update by host
 let players_attributes = {};
+let players_count = 0
 let items = [];
 let projectiles = [];
 let host_id = ""
@@ -15,14 +16,15 @@ server.listen(5432,function(){
 });
 
 io.on('connection',  function(socket){
-    if(Object.keys(players_box2d).length === 0) {
+    players_count++;
+    if(players_count === 0) {
         host_id = socket.id;
         console.log("We have a host now!");
     }
     console.log("Player Connected!");
 
     // if there is no player in the server, make this client the host
-    socket.emit('isHost', { isHost : Object.keys(players_box2d).length === 0 })
+    socket.emit('isHost', { isHost : players_count === 0 })
 
     // self id
     socket.emit('socketID', { id : socket.id });
@@ -45,12 +47,10 @@ io.on('connection',  function(socket){
         players_box2d = data.players_box2d;
         items = data.items;
         projectiles = data.projectiles;
-        socket.broadcast.emit('slaveUpdate',); // TODO
+        socket.broadcast.on('slaveUpdate', function (data){
+            players_box2d[socket.id] = data;
+        })
     });
-
-    socket.on('slaveUpdate', function (data){
-        players_box2d[socket.id] = data;
-    })
 
     socket.on('newProjectile', function (data){
         socket.broadcast.emit('newProjectile', data);
@@ -62,6 +62,7 @@ io.on('connection',  function(socket){
         socket.broadcast.emit('playerDisconnected',{ id : socket.id });
         delete players_box2d[socket.id]
         delete players_attributes[socket.id]
+        players_count--;
     });
 });
 

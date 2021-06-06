@@ -11,21 +11,25 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
+import com.celirk.manifoldtravelers.Screens.PlayScreen;
 
 import static java.lang.Math.round;
 
 public class Hud implements Disposable {
+    private PlayScreen screen;
     public Stage stage;
     Label countdownLabel;
     private Viewport viewport;
     private Integer worldTimer;
     Label FPSLabel;
+    Label hostLabel;
 //    Label timeLabel;
 //    Label levelLabel;
 //    Label worldLabel;
 //    Label playerLabel;
 
-    public Hud(SpriteBatch sb) {
+    public Hud(SpriteBatch sb, PlayScreen screen) {
+        this.screen = screen;
         worldTimer = 300;
 
         viewport = new FitViewport(ManifoldTravelers.V_WIDTH, ManifoldTravelers.V_HEIGHT, new OrthographicCamera());
@@ -42,8 +46,12 @@ public class Hud implements Disposable {
         // table.row();
         // to start a new row
         FPSLabel = new Label("0", new Label.LabelStyle(new BitmapFont(), Color.CHARTREUSE));
+
+        hostLabel = new Label("false", new Label.LabelStyle(new BitmapFont(), Color.CHARTREUSE));
+
         table.add(FPSLabel).expandX().padTop(10);
         table.add(countdownLabel).expandX().padTop(10);
+        table.add(hostLabel).expandX().padTop(10);
         stage.addActor(table);
     }
 
@@ -54,5 +62,11 @@ public class Hud implements Disposable {
 
     public void update(float dt){
         FPSLabel.setText(String.format("FPS: %2d", round(1 / dt)));
+        try {
+            hostLabel.setText(String.format("Host:%b", screen.getSocket().isHost()));
+        }catch (Exception e) {
+
+        }
+
     }
 }

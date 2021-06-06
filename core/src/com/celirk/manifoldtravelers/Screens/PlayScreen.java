@@ -82,7 +82,7 @@ public class PlayScreen implements Screen {
 
         gamePort = new FitViewport(ManifoldTravelers.V_WIDTH / ManifoldTravelers.PPM, ManifoldTravelers.V_HEIGHT / ManifoldTravelers.PPM, gamecam);
 
-        hud = new Hud(game.batch);
+        hud = new Hud(game.batch, this);
 
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("l1.tmx");
