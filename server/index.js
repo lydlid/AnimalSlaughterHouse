@@ -46,7 +46,7 @@ io.on('connection',  function(socket){
     })
 
     socket.on('newProjectile', function (data){
-        socket.broadcast('newProjectile', data);
+        socket.broadcast.emit('newProjectile', data);
     });
 
     // if client disconnects
