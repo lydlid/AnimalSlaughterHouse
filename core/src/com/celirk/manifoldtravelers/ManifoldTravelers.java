@@ -30,7 +30,7 @@ public class ManifoldTravelers extends Game {
 
     public static final int MASK_PORTALABLE = CATEGORY_PORTAL;
     public static final int MASK_PORTAL = CATEGORY_PORTALABLE | CATEGORY_PLAYER | CATEGORY_GROUND;
-    public static final int MASK_PLAYER = CATEGORY_PORTAL | CATEGORY_GROUND | CATEGORY_ITEM | CATEGORY_PROJECTILE;
+    public static final int MASK_PLAYER = CATEGORY_PORTAL | CATEGORY_GROUND | CATEGORY_ITEM | CATEGORY_PROJECTILE | CATEGORY_PLAYER;
     public static final int MASK_GROUND = CATEGORY_PORTAL | CATEGORY_PLAYER | CATEGORY_ITEM | CATEGORY_PROJECTILE;
     public static final int MASK_SPAWNER = CATEGORY_ITEM;
     public static final int MASK_ITEM = CATEGORY_PLAYER | CATEGORY_ITEM | CATEGORY_GROUND | CATEGORY_SPAWNER;
@@ -55,7 +55,4 @@ public class ManifoldTravelers extends Game {
 	public void dispose () {
 		batch.dispose();
 	}
-
-
-
 }

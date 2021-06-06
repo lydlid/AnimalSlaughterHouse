@@ -43,8 +43,6 @@ public class Player extends Sprite {
     private float attack_time = -1e10F;
     private float attack_time_segment = 1e10F;
 
-    private String id;
-
     public Player(PlayScreen screen, float x, float y) {
         this.screen = screen;
         this.world = screen.getWorld();
@@ -109,7 +107,6 @@ public class Player extends Sprite {
     private void defineUtils() {
         weapon_on_hand = 0;
         hit_point = 100;
-        id = new String();
         //hp_indicator = new Indicator((int) getX(), (int) getY());
     }
 
@@ -215,14 +212,6 @@ public class Player extends Sprite {
 
             b2body.applyLinearImpulse(direction.scl(-2), b2body.getWorldCenter(), true);
         }
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public void setWeapon_on_hand(int weapon_on_hand) {

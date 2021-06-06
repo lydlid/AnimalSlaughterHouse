@@ -93,6 +93,10 @@ public class GameSocket {
                         float hit_point = (float) player_attribute.getDouble("hit_point");
                         int weapon_on_hand = player_attribute.getInt("weapon_on_hand");
 
+
+                        if(socket_id.equals(key)) {
+                            continue;
+                        }
                         Player enemy = new Player(screen, x, y);
                         enemy.setHitPoint(hit_point);
                         enemy.setVelocity(velocity_x, velocity_y);
@@ -142,7 +146,8 @@ public class GameSocket {
                     }
 
                 }catch(JSONException e){
-                    Gdx.app.log("SocketIO", "Error getting players");
+                    Gdx.app.log("SocketIO", "Error getting world");
+                    System.out.println(data);
                 }
             }
         }).on("newPlayer", new Emitter.Listener() {
@@ -174,7 +179,6 @@ public class GameSocket {
             @Override
             public void call(Object... args) {
                 JSONObject newPlayer = (JSONObject) args[0];
-                System.out.println(newPlayer);
                 try {
                     JSONObject player_box2d = newPlayer.getJSONObject("player_box2d");
                     float x = (float) player_box2d.getDouble("x");
@@ -191,6 +195,8 @@ public class GameSocket {
                     player.setVelocity(velocity_x, velocity_y);
                     player.setWeapon_on_hand(weapon_on_hand);
                     screen.setPlayer(player);
+
+                    screen.setInitialized(true);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -239,9 +245,9 @@ public class GameSocket {
             JSONObject jsonObject = new JSONObject();
 
             JSONObject players_json = new JSONObject();
-            players_json.put(screen.getPlayer().getId(), screen.getPlayer().getJsonAttribute());
+            players_json.put(socket_id, screen.getPlayer().getJsonAttribute());
             for (HashMap.Entry<String, Player> entry : screen.getEnemies().entrySet()) {
-                players_json.put(entry.getValue().getId(), entry.getValue().getJsonAttribute());
+                players_json.put(entry.getKey(), entry.getValue().getJsonAttribute());
             }
             jsonObject.put("players", players_json);
 

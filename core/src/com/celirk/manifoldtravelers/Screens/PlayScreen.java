@@ -70,7 +70,12 @@ public class PlayScreen implements Screen {
     private final int update_every_n_frames = 5;
     private int n_frames_without_update = update_every_n_frames;
 
+    private boolean isInitialized;
+
+
     public PlayScreen(ManifoldTravelers game) {
+        isInitialized = false;
+
         atlas = new TextureAtlas("animalWithBullet.pack");
 
         this.game = game;
@@ -94,7 +99,7 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
         // temp player
-        player = new Player(this, 128f, 128f);
+        //player = new Player(this, 128f, 128f);
 
         enemies = new HashMap<>();
 
@@ -127,7 +132,8 @@ public class PlayScreen implements Screen {
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         game.batch.begin();
-        player.draw(game.batch);
+        if(isInitialized)
+            player.draw(game.batch);
         for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
             entry.getValue().draw(game.batch);
         }
@@ -157,13 +163,12 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt) {
-        // dt == delta time
-        handleInput(dt);
         // maybe useless for slaves?
         world.step(dt, 6, 2);
-
-        player.update(dt);
-
+        if(isInitialized) {
+            handleInput(dt);
+            player.update(dt);
+        }
 
         //n_frames_without_update++;
         // update with server
@@ -187,14 +192,15 @@ public class PlayScreen implements Screen {
 
             socket.hostUpdate();
         } else {
-            socket.slaveUpdate();
+            if(isInitialized)
+                socket.slaveUpdate();
         }
 
         hud.update(dt);
-
-        gamecam.position.x = player.b2body.getPosition().x;
-        gamecam.position.y = player.b2body.getPosition().y;
-
+        if(isInitialized) {
+            gamecam.position.x = player.b2body.getPosition().x;
+            gamecam.position.y = player.b2body.getPosition().y;
+        }
         gamecam.update();
         renderer.setView(gamecam);
     }
@@ -269,7 +275,9 @@ public class PlayScreen implements Screen {
         return player;
     }
 
-
+    public void setInitialized(boolean initialized) {
+        isInitialized = initialized;
+    }
 
     public GameSocket getSocket() {
         return socket;
