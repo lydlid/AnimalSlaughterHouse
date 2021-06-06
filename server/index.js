@@ -20,29 +20,36 @@ io.on('connection',  function(socket){
         console.log("We have a host now!");
     }
     console.log("Player Connected!");
+
     // if there is no player in the server, make this client the host
     socket.emit('isHost', { isHost : Object.keys(players_box2d).length === 0 })
+
     // self id
     socket.emit('socketID', { id : socket.id });
     players_box2d[socket.id] = new player_box2d(64, 64, 0, 0);
     players_attributes[socket.id] = new player_attribute(100, 0);
+
     // tell other clients a new player comes
     socket.broadcast.emit('newPlayer',{ id : socket.id, player_box2d : players_box2d[socket.id], player_attribute : players_attributes[socket.id] });
+
     // tell this client to initialize its own player
     socket.emit('selfPlayer',{ id : socket.id, player_box2d : players_box2d[socket.id], player_attribute : players_attributes[socket.id] });
+
     // when client requests update from server, this only happens when someone joins the world
     socket.on('requestWorld', function(){
         socket.emit('fullWorld', { players_box2d : players_box2d, players_attribute : players_attributes, items : items, projectiles : projectiles });
     });
+
     // get host's update
     socket.on('hostUpdate', function (data){
         players_box2d = data.players_box2d;
         items = data.items;
         projectiles = data.projectiles;
+        socket.broadcast.emit('slaveUpdate',); // TODO
     });
 
     socket.on('slaveUpdate', function (data){
-        players_attributes[socket.id] = data;
+        players_box2d[socket.id] = data;
     })
 
     socket.on('newProjectile', function (data){

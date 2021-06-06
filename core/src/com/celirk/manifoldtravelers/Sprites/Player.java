@@ -241,4 +241,9 @@ public class Player extends Sprite {
         }
         return jsonObject;
     }
+
+    public void setPos(float x, float y) {
+        setPosition(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
+        b2body.setTransform(getX(),getY(),0);
+    }
 }

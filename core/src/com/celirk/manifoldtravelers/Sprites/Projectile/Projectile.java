@@ -32,7 +32,9 @@ public abstract class Projectile extends Sprite {
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bdef);
+        body.setBullet(true);
         body.applyLinearImpulse(velocity, body.getWorldCenter(), true);
+
 
         fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
