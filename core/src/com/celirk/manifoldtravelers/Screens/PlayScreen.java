@@ -173,7 +173,6 @@ public class PlayScreen implements Screen {
         //n_frames_without_update++;
         // update with server
         if (socket.isHost()) {
-            System.out.println(1);
             for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
                 entry.getValue().update(dt);
             }
@@ -189,8 +188,8 @@ public class PlayScreen implements Screen {
             for(Spawner spawner : creator.getSpawners()) {
                 spawner.update(dt);
             }
-
-            socket.hostUpdate();
+            if(isInitialized)
+                socket.hostUpdate();
         } else {
             if(isInitialized)
                 socket.slaveUpdate();

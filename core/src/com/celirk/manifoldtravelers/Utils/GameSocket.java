@@ -320,7 +320,7 @@ public class GameSocket {
             for (HashMap.Entry<String, Player> entry : screen.getEnemies().entrySet()) {
                 players_json.put(entry.getKey(), entry.getValue().getJsonAttribute());
             }
-            jsonObject.put("players", players_json);
+            jsonObject.put("players_attribute", players_json);
 
             JSONArray items_json = new JSONArray();
             for (Item item : screen.getItems()) {
