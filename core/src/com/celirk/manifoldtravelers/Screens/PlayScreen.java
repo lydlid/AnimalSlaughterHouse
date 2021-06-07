@@ -97,7 +97,7 @@ public class PlayScreen implements Screen {
 
         world.setContactListener(new WorldContactListener());
         // temp player
-        //player = new Player(this, 128f, 128f);
+        // player = new Player(this, 128f, 128f);
 
         enemies = new HashMap<>();
 
@@ -154,10 +154,12 @@ public class PlayScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.A) && player.b2body.getLinearVelocity().x >= -2)
             player.b2body.applyLinearImpulse(new Vector2(-0.2f, 0), player.b2body.getWorldCenter(), true);
 
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             player.shoot(Gdx.input.getX() - gamePort.getScreenWidth() / 2,
                     Gdx.graphics.getHeight() - Gdx.input.getY() - gamePort.getScreenHeight() / 2,
                     delta);
+        }
+
     }
 
     public void update(float dt) {
@@ -171,7 +173,7 @@ public class PlayScreen implements Screen {
         //n_frames_without_update++;
         // update with server
         if (socket.isHost()) {
-
+            System.out.println(1);
             for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
                 entry.getValue().update(dt);
             }
@@ -186,7 +188,6 @@ public class PlayScreen implements Screen {
 
             for(Spawner spawner : creator.getSpawners()) {
                 spawner.update(dt);
-
             }
 
             socket.hostUpdate();

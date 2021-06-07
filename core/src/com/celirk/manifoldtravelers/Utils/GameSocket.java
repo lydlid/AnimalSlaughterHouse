@@ -51,9 +51,10 @@ public class GameSocket {
             @Override
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
+                //System.out.println(data);
                 try {
                     isHost = data.getBoolean("isHost");
-                    System.out.println(isHost);
+                    //System.out.println(isHost);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error checking host");
                 }
@@ -73,7 +74,7 @@ public class GameSocket {
             @Override
             public void call(Object... args) {
                 JSONObject data = (JSONObject) args[0];
-                System.out.println(data);
+                //System.out.println(data);
                 try {
                     JSONObject players_box2d = data.getJSONObject("players_box2d");
                     JSONObject players_attribute = data.getJSONObject("players_attribute");
