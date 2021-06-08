@@ -21,7 +21,7 @@
    eJzt1jVPBUEUhuGl4f4WnBanvTh0uBT4FSjwaxS4Nbg2uDa4NsjP4q23moSZYTZ3vuTpNpvvJGezx5/iOGUoRwUqUYVq1EAkaTyXjgxkIgvZyEGu4DtUZjXVcdawjg10ogvdqKdfAxrRhGa0oBVtgt3zeC4fBShEEYpRglID5j9kziMc4wRDGMYIeujXiz70I4AgQggLdvdL2CGVuWXOO9zjAVOYxgxG6TeGcUwggihiiAt2l7FDKvPJnF/4xo/rW5il3xzmsYBFLGEZK4LdZeyQrri/hU36bWEbO9jFHvZxINhdxg7pivtbOKXfGc5xgUtc4Ro3gt1l7JCuuL+FR/o94RkveMUb3vEh2F3GDnk5MnbIy5GxQ16I6Xee6ui882p9jlPnk/vOv0bnndfO7B2Gza/zzhtg9kHD5td55yWYfdKw+b1056mIl+48FbF3nr3zkuHOs1GbAP+1IEIIG/aP05EIM0cRQzwJ57exsbGxsbGx+c/8AjI/jJs=
   </data>
  </layer>
- <objectgroup id="10" name="ground">
+ <objectgroup id="10" name="ground" visible="0">
   <object id="68" x="912" y="160" width="96" height="128"/>
   <object id="70" x="960" y="288" width="48" height="192"/>
   <object id="71" x="816" y="352" width="144" height="128"/>
@@ -42,30 +42,8 @@
   <object id="89" x="0" y="0" width="1024" height="16"/>
   <object id="90" x="0" y="0" width="16" height="496"/>
  </objectgroup>
- <objectgroup id="5" name="portalable">
-  <object id="24" x="112" y="32" width="800" height="80"/>
-  <object id="25" x="112" y="112" width="96" height="272"/>
-  <object id="26" x="112" y="400" width="336" height="80"/>
-  <object id="27" x="592" y="400" width="320" height="80"/>
-  <object id="29" x="448" y="400" width="144" height="16"/>
-  <object id="30" x="256" y="384" width="80" height="16"/>
-  <object id="31" x="464" y="384" width="80" height="16"/>
-  <object id="32" x="688" y="384" width="80" height="16"/>
-  <object id="33" x="208" y="272" width="704" height="112"/>
-  <object id="34" x="336" y="256" width="112" height="16"/>
-  <object id="35" x="608" y="256" width="112" height="16"/>
-  <object id="36" x="880" y="256" width="32" height="16"/>
-  <object id="37" x="208" y="224" width="224" height="32"/>
-  <object id="38" x="432" y="240" width="144" height="16"/>
-  <object id="39" x="272" y="112" width="160" height="16"/>
-  <object id="40" x="272" y="128" width="48" height="16"/>
-  <object id="41" x="272" y="144" width="160" height="80"/>
-  <object id="42" x="576" y="112" width="336" height="16"/>
-  <object id="43" x="688" y="128" width="224" height="16"/>
-  <object id="44" x="576" y="144" width="336" height="112"/>
-  <object id="45" x="432" y="240" width="144" height="16"/>
- </objectgroup>
- <objectgroup id="6" name="Spawner">
+ <objectgroup id="5" name="portalable"/>
+ <objectgroup id="6" name="Spawner" visible="0">
   <object id="94" x="928" y="320" width="16" height="16"/>
   <object id="95" x="48" y="448" width="16" height="16"/>
   <object id="98" x="624" y="16" width="16" height="16"/>
