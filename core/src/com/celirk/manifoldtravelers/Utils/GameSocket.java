@@ -206,47 +206,40 @@ public class GameSocket {
                     }
 
                     JSONArray items = data.getJSONArray("items");
-                    for(int i = 0; i < items.length(); i++){
+                    int i = 0;
+                    for(Item item : screen.getItems()){
                         JSONObject item_ = items.getJSONObject(i);
                         float x = (float) item_.getDouble("x");
                         float y = (float) item_.getDouble("y");
                         float velocity_x = (float) item_.getDouble("velocity_x");
                         float velocity_y = (float) item_.getDouble("velocity_y");
                         int id = item_.getInt("id");
-                        Item item;
-                        switch (id) {
-                            case 1:
-                                item = new Pistol(screen, x, y);
-                                break;
-                            default:
-                                throw new IllegalStateException("Unexpected value: " + id);
-                        }
+
+                        item.setPos(x, y);
 
                         item.setVelocity(velocity_x, velocity_y);
-                        screen.appendItem(item);
+
+                        i++;
                     }
 
                     JSONArray projectiles = data.getJSONArray("projectiles");
-                    for(int i = 0; i < items.length(); i++){
+                    i = 0;
+                    for(Projectile projectile : screen.getProjectiles()){
+
                         JSONObject projectiles_ = projectiles.getJSONObject(i);
                         float x = (float) projectiles_.getDouble("x");
                         float y = (float) projectiles_.getDouble("y");
                         float velocity_x = (float) projectiles_.getDouble("velocity_x");
                         float velocity_y = (float) projectiles_.getDouble("velocity_y");
                         int id = projectiles_.getInt("id");
-                        Projectile projectile;
-                        switch (id) {
-                            case 1:
-                                projectile = new PistolBullet(screen, x, y, new Vector2(velocity_x,velocity_y));
-                                break;
-                            default:
-                                throw new IllegalStateException("Unexpected value: " + id);
-                        }
-                        screen.appendProjectile(projectile);
+
+                        projectile.setPos(x, y);
+                        projectile.setVelocity(velocity_x, velocity_y);
+                        i++;
                     }
 
                 }catch(JSONException e){
-                    Gdx.app.log("SocketIO", "Error getting world");
+                    Gdx.app.log("SocketIO", "Error updating slave");
                     System.out.println(data);
                 }
             }

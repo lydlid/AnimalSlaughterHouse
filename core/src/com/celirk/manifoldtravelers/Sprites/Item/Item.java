@@ -78,4 +78,8 @@ public abstract class Item extends Sprite {
     public void setVelocity(float x, float y) {
         body.setLinearVelocity(x, y);
     }
+
+    public void setPos(float x, float y) {
+        body.setTransform(x / ManifoldTravelers.PPM,y / ManifoldTravelers.PPM,0);
+    }
 }
