@@ -85,7 +85,7 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch, this);
 
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("l1.tmx");
+        map = mapLoader.load("tmp1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / ManifoldTravelers.PPM);
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
@@ -135,6 +135,9 @@ public class PlayScreen implements Screen {
         for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
             entry.getValue().draw(game.batch);
         }
+        for(Projectile projectile : projectiles){
+            projectile.draw(game.batch);
+        }
 
         game.batch.end();
 
@@ -168,6 +171,7 @@ public class PlayScreen implements Screen {
         if(isInitialized) {
             handleInput(dt);
             player.update(dt);
+
         }
 
         //n_frames_without_update++;

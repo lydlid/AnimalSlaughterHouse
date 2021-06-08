@@ -125,9 +125,9 @@ public class Player extends Sprite {
         setPosition((float) (b2body.getPosition().x+(11.5)*getWidth()/2), b2body.getPosition().y + 6*getHeight()/2);
         setRegion(getFrame(dt));
 
-//        for(Projectile ptile : screen.getProjectiles()){
-//            ptile.update(dt);
-//        }
+//      for(Projectile ptile : screen.getProjectiles()){
+//          ptile.update(dt);
+//      }
 
     }
 
