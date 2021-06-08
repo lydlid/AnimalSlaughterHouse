@@ -315,12 +315,12 @@ public class GameSocket {
         try {
             JSONObject jsonObject = new JSONObject();
 
-            JSONObject players_json = new JSONObject();
-            players_json.put(socket_id, screen.getPlayer().getJsonAttribute());
+            JSONObject players_attribute = new JSONObject();
+            players_attribute.put(socket_id, screen.getPlayer().getJsonAttribute());
             for (HashMap.Entry<String, Player> entry : screen.getEnemies().entrySet()) {
-                players_json.put(entry.getKey(), entry.getValue().getJsonAttribute());
+                players_attribute.put(entry.getKey(), entry.getValue().getJsonAttribute());
             }
-            jsonObject.put("players_attribute", players_json);
+            jsonObject.put("players_attribute", players_attribute);
 
             JSONArray items_json = new JSONArray();
             for (Item item : screen.getItems()) {

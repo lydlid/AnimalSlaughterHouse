@@ -44,12 +44,15 @@ io.on('connection',  function(socket){
     // get host's update
     socket.on('hostUpdate', function (data) {
         //console.log(data);
-        players_box2d = data.players_box2d;
         players_attribute = data.players_attribute;
         items = data.items;
         projectiles = data.projectiles;
         socket.broadcast.emit('slaveUpdate', { players_box2d : players_box2d, players_attribute : players_attribute, items : items, projectiles : projectiles });
     });
+
+    socket.on('socketUpdate', function(data){
+        players_box2d[socket.id] = data;
+    })
 
     socket.on('newProjectile', function (data){
         socket.broadcast.emit('newProjectile', data);
