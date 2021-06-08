@@ -50,7 +50,7 @@ io.on('connection',  function(socket){
         socket.broadcast.emit('slaveUpdate', { players_box2d : players_box2d, players_attribute : players_attribute, items : items, projectiles : projectiles });
     });
 
-    socket.on('socketUpdate', function(data){
+    socket.on('slaveUpdate', function(data){
         players_box2d[socket.id] = data;
     })
 

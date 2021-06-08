@@ -146,6 +146,35 @@ public class GameSocket {
                     System.out.println(data);
                 }
             }
+        }).on("hostUpdate", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    JSONObject players_box2d = data.getJSONObject("players_box2d");
+                    JSONObject players_attribute = data.getJSONObject("players_attribute");
+                    Iterator<String> keys = players_box2d.keys();
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+                        JSONObject player_box2d = players_box2d.getJSONObject(key);
+                        float x = (float) player_box2d.getDouble("x");
+                        float y = (float) player_box2d.getDouble("y");
+                        float velocity_x = (float) player_box2d.getDouble("velocity_x");
+                        float velocity_y = (float) player_box2d.getDouble("velocity_y");
+
+                        if(socket_id.equals(key)) {
+                            continue;
+                        }
+                        Player enemy = screen.getEnemies().get(key);
+                        enemy.setPos(x, y);
+                        enemy.setVelocity(velocity_x, velocity_y);
+                        screen.getEnemies().put(key, enemy);
+                    }
+                }catch(JSONException e){
+                    Gdx.app.log("SocketIO", "Error updating host");
+                    System.out.println(data);
+                }
+            }
         }).on("slaveUpdate", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
