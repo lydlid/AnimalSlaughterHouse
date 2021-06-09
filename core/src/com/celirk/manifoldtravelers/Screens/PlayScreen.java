@@ -25,6 +25,8 @@ import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
 import com.celirk.manifoldtravelers.Utils.GameSocket;
 import com.celirk.manifoldtravelers.Utils.WorldContactListener;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
+
 
 import java.util.HashMap;
 

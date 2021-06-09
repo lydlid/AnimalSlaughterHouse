@@ -222,8 +222,10 @@ public class Player extends Sprite {
     }
 
     public void hit(float delta_hp) {
+        ManifoldTravelers.manager.get("audio/sounds/getHit.wav", Sound.class).play();
         hit_point -= delta_hp;
         if(hit_point <= 0){
+            ManifoldTravelers.manager.get("audio/sounds/die.wav", Sound.class).play();
             playerIsDead = true;
         }
 
