@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -25,17 +24,8 @@ import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
 import com.celirk.manifoldtravelers.Utils.GameSocket;
 import com.celirk.manifoldtravelers.Utils.WorldContactListener;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import io.socket.client.IO;
-import io.socket.client.Socket;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
@@ -130,10 +120,11 @@ public class PlayScreen implements Screen {
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         game.batch.begin();
-        if(isInitialized)
+        if(isInitialized){
             player.draw(game.batch);
-        for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
-            entry.getValue().draw(game.batch);
+            for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+                entry.getValue().draw(game.batch);
+            }
         }
         //draw bullet
         for(Projectile projectile : projectiles){
@@ -146,17 +137,17 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float delta) {
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && player.b2body.getLinearVelocity().y <= 2)
-            player.b2body.applyLinearImpulse(new Vector2(0, 0.2f), player.b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && player.body.getLinearVelocity().y <= 2)
+            player.body.applyLinearImpulse(new Vector2(0, 0.2f), player.body.getWorldCenter(), true);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.S) && player.b2body.getLinearVelocity().y >= -2)
-            player.b2body.applyLinearImpulse(new Vector2(0, -0.2f), player.b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.S) && player.body.getLinearVelocity().y >= -2)
+            player.body.applyLinearImpulse(new Vector2(0, -0.2f), player.body.getWorldCenter(), true);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && player.b2body.getLinearVelocity().x <= 2)
-            player.b2body.applyLinearImpulse(new Vector2(0.2f, 0), player.b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && player.body.getLinearVelocity().x <= 2)
+            player.body.applyLinearImpulse(new Vector2(0.2f, 0), player.body.getWorldCenter(), true);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A) && player.b2body.getLinearVelocity().x >= -2)
-            player.b2body.applyLinearImpulse(new Vector2(-0.2f, 0), player.b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && player.body.getLinearVelocity().x >= -2)
+            player.body.applyLinearImpulse(new Vector2(-0.2f, 0), player.body.getWorldCenter(), true);
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             player.shoot(Gdx.input.getX() - gamePort.getScreenWidth() / 2,
@@ -173,22 +164,22 @@ public class PlayScreen implements Screen {
             player.update(dt);
 
         }
+        for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+            entry.getValue().update(dt);
+        }
+
+        for(Projectile projectile : projectiles){
+            projectile.update(dt);
+        }
+
+        for(Item item : items){
+            item.update(dt);
+        }
+
 
         //n_frames_without_update++;
         // update with server
         if (socket.isHost()) {
-            for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
-                entry.getValue().update(dt);
-            }
-
-            for(Projectile projectile : projectiles){
-                projectile.update(dt);
-            }
-
-            for(Item item : items){
-                item.update(dt);
-            }
-
             for(Spawner spawner : creator.getSpawners()) {
                 spawner.update(dt);
             }
@@ -205,8 +196,8 @@ public class PlayScreen implements Screen {
 
         hud.update(dt);
         if(isInitialized) {
-            gamecam.position.x = player.b2body.getPosition().x;
-            gamecam.position.y = player.b2body.getPosition().y;
+            gamecam.position.x = player.body.getPosition().x;
+            gamecam.position.y = player.body.getPosition().y;
         }
         gamecam.update();
         renderer.setView(gamecam);

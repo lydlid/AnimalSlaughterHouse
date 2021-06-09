@@ -8,10 +8,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
-import com.celirk.manifoldtravelers.Sprites.Indicator.Indicator;
 import com.celirk.manifoldtravelers.Sprites.Projectile.PistolBullet;
 import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +31,7 @@ public class Player extends Sprite {
 
     public PlayScreen screen;
     public World world;
-    public Body b2body;
+    public Body body;
 
     private int weapon_on_hand;
 
@@ -43,6 +41,10 @@ public class Player extends Sprite {
     private float attack_time = -1e10F;
     private float attack_time_segment = 1e10F;
 
+    protected boolean toDestroy;
+    protected boolean destroyed;
+
+    String id;
 
     public Player(PlayScreen screen, float x, float y) {
         this.screen = screen;
@@ -96,7 +98,7 @@ public class Player extends Sprite {
 
         bdef.linearDamping = 10;
 
-        b2body = world.createBody(bdef);
+        body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();//circle shape
@@ -105,7 +107,7 @@ public class Player extends Sprite {
         fdef.shape = shape;
         fdef.filter.maskBits = ManifoldTravelers.MASK_PLAYER;
         fdef.filter.categoryBits = ManifoldTravelers.CATEGORY_PLAYER;
-        b2body.createFixture(fdef).setUserData(this);
+        body.createFixture(fdef).setUserData(this);
     }
 
     private void defineUtils() {
@@ -119,15 +121,25 @@ public class Player extends Sprite {
     }
 
     public void setVelocity(float x, float y) {
-        this.b2body.setLinearVelocity(x, y);
+        this.body.setLinearVelocity(x, y);
     }
 
     public void update(float dt) {
         attack_time += dt;
         // V_WIDTH/2 - sprite_width/2, V_HEIGHT/2 - sprite_height/2
         // 200 - 16, 112.5 - 16
-        setPosition( ManifoldTravelers.V_WIDTH/2 - getWidth()/2, ManifoldTravelers.V_HEIGHT/2 - getHeight()/2);
+        setPosition( ManifoldTravelers.V_WIDTH/2 - getWidth()/2 +
+                        (body.getPosition().x-screen.getPlayer().getbody().getPosition().x) * ManifoldTravelers.PPM,
+                ManifoldTravelers.V_HEIGHT/2 - getHeight()/2 +
+                        (body.getPosition().y-screen.getPlayer().getbody().getPosition().y) * ManifoldTravelers.PPM);
+
         setRegion(getFrame(dt));
+
+        if(toDestroy && !destroyed){
+            world.destroyBody(body);
+            destroyed = true;
+            screen.getEnemies().remove(this.id);
+        }
 
     }
 
@@ -160,19 +172,19 @@ public class Player extends Sprite {
     }
 
     public State getState() {
-        if(abs(b2body.getLinearVelocity().x) > abs(b2body.getLinearVelocity().y)){
-            if(b2body.getLinearVelocity().x > 0)
+        if(abs(body.getLinearVelocity().x) > abs(body.getLinearVelocity().y)){
+            if(body.getLinearVelocity().x > 0)
                 return State.RIGHT;
-            else if(b2body.getLinearVelocity().x <= 0)
+            else if(body.getLinearVelocity().x <= 0)
                 return State.LEFT;
         }
-        else if(abs(b2body.getLinearVelocity().x) < abs(b2body.getLinearVelocity().y)){
-            if(b2body.getLinearVelocity().y > 0)
+        else if(abs(body.getLinearVelocity().x) < abs(body.getLinearVelocity().y)){
+            if(body.getLinearVelocity().y > 0)
                 return State.UP;
-            else if(b2body.getLinearVelocity().y <= 0)
+            else if(body.getLinearVelocity().y <= 0)
                 return State.DOWN;
         }
-        else if(b2body.getLinearVelocity().x == 0 &&b2body.getLinearVelocity().y == 0){
+        else if(body.getLinearVelocity().x == 0 && body.getLinearVelocity().y == 0){
             return State.STAND;
         }
         return State.STAND;
@@ -204,15 +216,15 @@ public class Player extends Sprite {
             velocity.scl(5);
 
             Projectile projectile = new PistolBullet(screen,
-                    b2body.getPosition().x + direction.x,
-                    b2body.getPosition().y + direction.y,
-                    velocity.add(b2body.getLinearVelocity()));
+                    body.getPosition().x + direction.x,
+                    body.getPosition().y + direction.y,
+                    velocity.add(body.getLinearVelocity()));
 
             screen.appendProjectile(projectile);
             screen.getSocket().newProjectile(projectile.getJson());
             attack_time = -attack_time_segment;
 
-            b2body.applyLinearImpulse(direction.scl(-2), b2body.getWorldCenter(), true);
+            body.applyLinearImpulse(direction.scl(-2), body.getWorldCenter(), true);
         }
     }
 
@@ -224,10 +236,10 @@ public class Player extends Sprite {
         JSONObject jsonObject = new JSONObject();
         try {
             //System.out.println(getX());
-            jsonObject.put("x", b2body.getPosition().x * ManifoldTravelers.PPM);
-            jsonObject.put("y", b2body.getPosition().y * ManifoldTravelers.PPM);
-            jsonObject.put("velocity_x", b2body.getLinearVelocity().x);
-            jsonObject.put("velocity_y", b2body.getLinearVelocity().y);
+            jsonObject.put("x", body.getPosition().x * ManifoldTravelers.PPM);
+            jsonObject.put("y", body.getPosition().y * ManifoldTravelers.PPM);
+            jsonObject.put("velocity_x", body.getLinearVelocity().x);
+            jsonObject.put("velocity_y", body.getLinearVelocity().y);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -244,10 +256,18 @@ public class Player extends Sprite {
         }
         return jsonObject;
     }
-    public void destroy(){
-        world.destroyBody(b2body);
-    }
     public void setPos(float x, float y) {
-        b2body.setTransform(x / ManifoldTravelers.PPM,y / ManifoldTravelers.PPM,0);
+        body.setTransform(x / ManifoldTravelers.PPM,y / ManifoldTravelers.PPM,0);
+    }
+    public Body getbody() {
+        return body;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void destroy(){
+        toDestroy = true;
     }
 }
