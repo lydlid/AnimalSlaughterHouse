@@ -143,6 +143,11 @@ public class PlayScreen implements Screen {
         game.batch.end();
 
         hud.stage.draw();
+
+        if(isInitialized&&gameOver()){
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
     }
 
     public void handleInput(float delta) {
@@ -171,7 +176,6 @@ public class PlayScreen implements Screen {
         if(isInitialized) {
             handleInput(dt);
             player.update(dt);
-
         }
 
         //n_frames_without_update++;
@@ -210,6 +214,14 @@ public class PlayScreen implements Screen {
         }
         gamecam.update();
         renderer.setView(gamecam);
+    }
+
+    public boolean gameOver(){
+        if(player.currentState == Player.State.DEAD && player.getStateTimer() > 3){
+            return true;
+        }
+        else
+            return false;
     }
 
     @Override

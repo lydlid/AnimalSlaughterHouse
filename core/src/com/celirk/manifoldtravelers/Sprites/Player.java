@@ -19,10 +19,11 @@ import static java.lang.Math.abs;
 
 public class Player extends Sprite {
     private TextureRegion playerMove;
-    public enum State { UP, DOWN, LEFT, RIGHT, STAND};
+    public enum State { UP, DOWN, LEFT, RIGHT, STAND, DEAD};
     public State currentState;
     public State previousState;
     private TextureRegion playerStand;
+    private TextureRegion playerDead;
     private Animation playerUp;
     private Animation playerDown;
     private Animation playerLeft;
@@ -42,6 +43,8 @@ public class Player extends Sprite {
 
     private float attack_time = -1e10F;
     private float attack_time_segment = 1e10F;
+
+    private boolean playerIsDead;
 
 
     public Player(PlayScreen screen, float x, float y) {
@@ -80,6 +83,8 @@ public class Player extends Sprite {
 
         playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
+        //create texture for dead player
+        playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
         definePlayer(x, y);
         defineUtils();
@@ -114,6 +119,16 @@ public class Player extends Sprite {
         //hp_indicator = new Indicator((int) getX(), (int) getY());
     }
 
+    //GAME OVER screen
+    public boolean isDead(){
+        return playerIsDead;
+    }
+
+    public float getStateTimer(){
+        return stateTimer;
+    }
+
+
     public void setHitPoint(float hit_point) {
         this.hit_point = hit_point;
     }
@@ -136,6 +151,9 @@ public class Player extends Sprite {
 
         TextureRegion region;
         switch (currentState){
+            case DEAD:
+                region = playerDead;
+                break;
             case DOWN:
                 region = (TextureRegion) playerDown.getKeyFrame(stateTimer, true);
                 break;
@@ -160,7 +178,10 @@ public class Player extends Sprite {
     }
 
     public State getState() {
-        if(abs(b2body.getLinearVelocity().x) > abs(b2body.getLinearVelocity().y)){
+        if(playerIsDead){
+            return State.DEAD;
+        }
+        else if(abs(b2body.getLinearVelocity().x) > abs(b2body.getLinearVelocity().y)){
             if(b2body.getLinearVelocity().x > 0)
                 return State.RIGHT;
             else if(b2body.getLinearVelocity().x <= 0)
@@ -189,6 +210,10 @@ public class Player extends Sprite {
 
     public void hit(float delta_hp) {
         hit_point -= delta_hp;
+        if(hit_point <= 0){
+            playerIsDead = true;
+        }
+
     }
 
     public void shoot(float x, float y, float dt) {
