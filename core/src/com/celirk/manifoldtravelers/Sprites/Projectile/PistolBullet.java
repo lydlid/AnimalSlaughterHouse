@@ -24,8 +24,13 @@ public class PistolBullet extends Projectile {
             destroyed = true;
             screen.removeProjectile(this);
         }
-        //System.out.println("I'm here!!!!!");
-        setPosition((float) (body.getPosition().x+(11.5)*getWidth()/2),body.getPosition().y + 6*getHeight()/2);
+
+        //setPosition((float) (body.getPosition().x+(11.5)*getWidth()/2)*3,(body.getPosition().y + 6*getHeight()/2)*3);
+        setPosition((body.getPosition().x-screen.getPlayer().b2body.getPosition().x)*ManifoldTravelers.PPM + 184 + getWidth()/2,
+                (body.getPosition().y-screen.getPlayer().b2body.getPosition().y)*ManifoldTravelers.PPM + 96.5F + getHeight()/2);
+        //System.out.print("x:"+body.getPosition().x - screen.getPlayer().b2body.getPosition().x+"\n");
+        //System.out.print("y:"+body.getPosition().y+"\n");
+
         setRegion(bulletPic);
         id = 1;
     }

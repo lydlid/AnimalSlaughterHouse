@@ -135,6 +135,7 @@ public class PlayScreen implements Screen {
         for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
             entry.getValue().draw(game.batch);
         }
+        //draw bullet
         for(Projectile projectile : projectiles){
             projectile.draw(game.batch);
         }
@@ -162,7 +163,6 @@ public class PlayScreen implements Screen {
                     Gdx.graphics.getHeight() - Gdx.input.getY() - gamePort.getScreenHeight() / 2,
                     delta);
         }
-
     }
 
     public void update(float dt) {

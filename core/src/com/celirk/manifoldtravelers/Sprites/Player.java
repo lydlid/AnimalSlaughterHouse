@@ -122,12 +122,10 @@ public class Player extends Sprite {
 
     public void update(float dt) {
         attack_time += dt;
-        setPosition((float) (b2body.getPosition().x+(11.5)*getWidth()/2), b2body.getPosition().y + 6*getHeight()/2);
+        // V_WIDTH/2 - sprite_width/2, V_HEIGHT/2 - sprite_height/2
+        // 200 - 16, 112.5 - 16
+        setPosition(200 - getWidth()/2, 112.5F - getHeight()/2);
         setRegion(getFrame(dt));
-
-//      for(Projectile ptile : screen.getProjectiles()){
-//          ptile.update(dt);
-//      }
 
     }
 

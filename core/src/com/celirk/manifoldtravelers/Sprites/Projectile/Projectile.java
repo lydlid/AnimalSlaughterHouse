@@ -8,7 +8,7 @@ import com.celirk.manifoldtravelers.Screens.PlayScreen;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class Projectile extends Sprite {
+public class Projectile extends Sprite {
     protected PlayScreen screen;
     protected World world;
     protected Body body;
