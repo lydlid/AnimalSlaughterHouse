@@ -49,7 +49,8 @@ public class ManifoldTravelers extends Game {
         batch = new SpriteBatch();
         manager = new AssetManager();
         manager.load("audio/music/mario_music.ogg", Music.class);
-        manager.load("audio/sounds/coin.wav", Sound.class);
+        manager.load("audio/sounds/pistol_shoot.wav", Sound.class);
+        manager.load("audio/sounds/pistol_reload.wav", Sound.class);
         manager.load("audio/sounds/bump.wav", Sound.class);
         manager.load("audio/sounds/breakblock.wav", Sound.class);
         manager.finishLoading();

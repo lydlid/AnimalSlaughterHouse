@@ -216,6 +216,7 @@ public class Player extends Sprite {
             case 1:
                 attack_time = 1;
                 attack_time_segment = 0.5F;
+                ManifoldTravelers.manager.get("audio/sounds/pistol_reload.wav", Sound.class).play();
         }
         weapon_on_hand = id;
     }
