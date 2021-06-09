@@ -124,7 +124,7 @@ public class Player extends Sprite {
         attack_time += dt;
         // V_WIDTH/2 - sprite_width/2, V_HEIGHT/2 - sprite_height/2
         // 200 - 16, 112.5 - 16
-        setPosition(200 - getWidth()/2, 112.5F - getHeight()/2);
+        setPosition( ManifoldTravelers.V_WIDTH/2 - getWidth()/2, ManifoldTravelers.V_HEIGHT/2 - getHeight()/2);
         setRegion(getFrame(dt));
 
     }
