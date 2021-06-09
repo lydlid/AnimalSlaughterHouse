@@ -130,7 +130,8 @@ public class PlayScreen implements Screen {
         if(isInitialized){
             player.draw(game.batch);
             for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
-                entry.getValue().draw(game.batch);
+                if(entry.getValue().getHit_point()>0)
+                    entry.getValue().draw(game.batch);
             }
         }
         //draw bullet
@@ -146,6 +147,8 @@ public class PlayScreen implements Screen {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
+
+
     }
 
     public void handleInput(float delta) {

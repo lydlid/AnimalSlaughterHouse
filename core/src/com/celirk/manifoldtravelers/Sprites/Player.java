@@ -297,4 +297,8 @@ public class Player extends Sprite {
     public void destroy(){
         toDestroy = true;
     }
+
+    public float getHit_point(){
+        return hit_point;
+    }
 }
