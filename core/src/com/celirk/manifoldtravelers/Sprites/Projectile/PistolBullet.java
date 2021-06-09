@@ -1,6 +1,7 @@
 package com.celirk.manifoldtravelers.Sprites.Projectile;
 
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
@@ -15,6 +16,7 @@ public class PistolBullet extends Projectile {
         id = 1;
         setBounds(x,y,16,16);
         setRegion(bulletPic);
+        ManifoldTravelers.manager.get("audio/sounds/coin.wav", Sound.class).play();
     }
 
     @Override
