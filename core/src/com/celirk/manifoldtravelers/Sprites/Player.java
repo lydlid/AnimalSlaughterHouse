@@ -43,6 +43,7 @@ public class Player extends Sprite {
     private float attack_time = -1e10F;
     private float attack_time_segment = 1e10F;
 
+
     public Player(PlayScreen screen, float x, float y) {
         this.screen = screen;
         this.world = screen.getWorld();
@@ -51,6 +52,7 @@ public class Player extends Sprite {
         stateTimer = 0;
         //playerDirection = 0;
         //setPosition(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
+
 
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
@@ -242,7 +244,9 @@ public class Player extends Sprite {
         }
         return jsonObject;
     }
-
+    public void destroy(){
+        world.destroyBody(b2body);
+    }
     public void setPos(float x, float y) {
         b2body.setTransform(x / ManifoldTravelers.PPM,y / ManifoldTravelers.PPM,0);
     }

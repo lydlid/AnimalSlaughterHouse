@@ -74,6 +74,7 @@ public class Projectile extends Sprite {
             jsonObject.put("velocity_x", body.getLinearVelocity().x);
             jsonObject.put("velocity_y", body.getLinearVelocity().y);
             jsonObject.put("attack", attack);
+            jsonObject.put("id", id);
         } catch (JSONException e) {
             e.printStackTrace();
         }

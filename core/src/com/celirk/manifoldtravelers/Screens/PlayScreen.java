@@ -85,7 +85,7 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch, this);
 
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("tmp1.tmx");
+        map = mapLoader.load("l1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / ManifoldTravelers.PPM);
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
@@ -192,11 +192,15 @@ public class PlayScreen implements Screen {
             for(Spawner spawner : creator.getSpawners()) {
                 spawner.update(dt);
             }
-            if(isInitialized)
+            if(isInitialized){
                 socket.hostUpdate();
-        } else {
-            if(isInitialized)
                 socket.slaveUpdate();
+            }
+        } else {
+            if(isInitialized) {
+                socket.slaveUpdate();
+                //System.out.println(enemies.size());
+            }
         }
 
         hud.update(dt);
@@ -282,7 +286,13 @@ public class PlayScreen implements Screen {
         isInitialized = initialized;
     }
 
+    public boolean isInitialized() {
+        return isInitialized;
+    }
+
     public GameSocket getSocket() {
         return socket;
     }
+
+
 }

@@ -12,7 +12,7 @@ public class PistolBullet extends Projectile {
         super(screen, x, y, velocity);
         bulletPic = new TextureRegion(screen.getAtlas().findRegion("bullet"),0,0,16,16);
         attack = 10;
-
+        id = 1;
         setBounds(x,y,16,16);
         setRegion(bulletPic);
     }
@@ -32,6 +32,6 @@ public class PistolBullet extends Projectile {
         //System.out.print("y:"+body.getPosition().y+"\n");
 
         setRegion(bulletPic);
-        id = 1;
+
     }
 }

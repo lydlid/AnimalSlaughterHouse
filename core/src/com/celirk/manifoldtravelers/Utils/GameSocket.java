@@ -73,14 +73,16 @@ public class GameSocket {
         }).on("fullWorld", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+
                 JSONObject data = (JSONObject) args[0];
-                //System.out.println(data);
+                System.out.println(data);
                 try {
                     JSONObject players_box2d = data.getJSONObject("players_box2d");
                     JSONObject players_attribute = data.getJSONObject("players_attribute");
                     Iterator<String> keys = players_box2d.keys();
                     while(keys.hasNext()) {
                         String key = keys.next();
+                        System.out.println(key);
                         JSONObject player_box2d = players_box2d.getJSONObject(key);
                         JSONObject player_attribute = players_attribute.getJSONObject(key);
                         float x = (float) player_box2d.getDouble("x");
@@ -92,13 +94,18 @@ public class GameSocket {
 
 
                         if(socket_id.equals(key)) {
-                            continue;
+                            Player player = new Player(screen, x, y);
+                            player.setHitPoint(hit_point);
+                            player.setVelocity(velocity_x, velocity_y);
+                            player.setWeapon_on_hand(weapon_on_hand);
+                            screen.setPlayer(player);
+                        } else {
+                            Player enemy = new Player(screen, x, y);
+                            enemy.setHitPoint(hit_point);
+                            enemy.setVelocity(velocity_x, velocity_y);
+                            enemy.setWeapon_on_hand(weapon_on_hand);
+                            screen.getEnemies().put(key, enemy);
                         }
-                        Player enemy = new Player(screen, x, y);
-                        enemy.setHitPoint(hit_point);
-                        enemy.setVelocity(velocity_x, velocity_y);
-                        enemy.setWeapon_on_hand(weapon_on_hand);
-                        screen.getEnemies().put(key, enemy);
                     }
 
                     JSONArray items = data.getJSONArray("items");
@@ -123,7 +130,7 @@ public class GameSocket {
                     }
 
                     JSONArray projectiles = data.getJSONArray("projectiles");
-                    for(int i = 0; i < items.length(); i++){
+                    for(int i = 0; i < projectiles.length(); i++){
                         JSONObject projectiles_ = projectiles.getJSONObject(i);
                         float x = (float) projectiles_.getDouble("x");
                         float y = (float) projectiles_.getDouble("y");
@@ -140,10 +147,11 @@ public class GameSocket {
                         }
                         screen.appendProjectile(projectile);
                     }
-
+                    screen.setInitialized(true);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting world");
                     System.out.println(data);
+                    System.out.println(e);
                 }
             }
         }).on("hostUpdate", new Emitter.Listener() {
@@ -178,69 +186,71 @@ public class GameSocket {
         }).on("slaveUpdate", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                JSONObject data = (JSONObject) args[0];
-                try {
-                    JSONObject players_box2d = data.getJSONObject("players_box2d");
-                    JSONObject players_attribute = data.getJSONObject("players_attribute");
-                    Iterator<String> keys = players_box2d.keys();
-                    while(keys.hasNext()) {
-                        String key = keys.next();
-                        JSONObject player_box2d = players_box2d.getJSONObject(key);
-                        JSONObject player_attribute = players_attribute.getJSONObject(key);
-                        float x = (float) player_box2d.getDouble("x");
-                        float y = (float) player_box2d.getDouble("y");
-                        float velocity_x = (float) player_box2d.getDouble("velocity_x");
-                        float velocity_y = (float) player_box2d.getDouble("velocity_y");
-                        float hit_point = (float) player_attribute.getDouble("hit_point");
-                        int weapon_on_hand = player_attribute.getInt("weapon_on_hand");
+                if(screen.isInitialized()) {
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        JSONObject players_box2d = data.getJSONObject("players_box2d");
+                        JSONObject players_attribute = data.getJSONObject("players_attribute");
+                        Iterator<String> keys = players_box2d.keys();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            JSONObject player_box2d = players_box2d.getJSONObject(key);
+                            JSONObject player_attribute = players_attribute.getJSONObject(key);
+                            float x = (float) player_box2d.getDouble("x");
+                            float y = (float) player_box2d.getDouble("y");
+                            float velocity_x = (float) player_box2d.getDouble("velocity_x");
+                            float velocity_y = (float) player_box2d.getDouble("velocity_y");
+                            float hit_point = (float) player_attribute.getDouble("hit_point");
+                            int weapon_on_hand = player_attribute.getInt("weapon_on_hand");
 
-                        if(socket_id.equals(key)) {
-                            continue;
+                            if (socket_id.equals(key)) {
+                                continue;
+                            }
+
+                            Player enemy = screen.getEnemies().get(key);
+                            enemy.setPos(x, y);
+                            enemy.setHitPoint(hit_point);
+                            enemy.setVelocity(velocity_x, velocity_y);
+                            enemy.setWeapon_on_hand(weapon_on_hand);
                         }
 
-                        Player enemy = screen.getEnemies().get(key);
-                        enemy.setPos(x, y);
-                        enemy.setHitPoint(hit_point);
-                        enemy.setVelocity(velocity_x, velocity_y);
-                        enemy.setWeapon_on_hand(weapon_on_hand);
+                        JSONArray items = data.getJSONArray("items");
+                        int i = 0;
+                        for (Item item : screen.getItems()) {
+                            JSONObject item_ = items.getJSONObject(i);
+                            float x = (float) item_.getDouble("x");
+                            float y = (float) item_.getDouble("y");
+                            float velocity_x = (float) item_.getDouble("velocity_x");
+                            float velocity_y = (float) item_.getDouble("velocity_y");
+                            int id = item_.getInt("id");
+
+                            item.setPos(x, y);
+
+                            item.setVelocity(velocity_x, velocity_y);
+
+                            i++;
+                        }
+
+                        JSONArray projectiles = data.getJSONArray("projectiles");
+                        i = 0;
+                        for (Projectile projectile : screen.getProjectiles()) {
+
+                            JSONObject projectiles_ = projectiles.getJSONObject(i);
+                            float x = (float) projectiles_.getDouble("x");
+                            float y = (float) projectiles_.getDouble("y");
+                            float velocity_x = (float) projectiles_.getDouble("velocity_x");
+                            float velocity_y = (float) projectiles_.getDouble("velocity_y");
+                            int id = projectiles_.getInt("id");
+
+                            projectile.setPos(x, y);
+                            projectile.setVelocity(velocity_x, velocity_y);
+                            i++;
+                        }
+
+                    } catch (JSONException e) {
+                        Gdx.app.log("SocketIO", "Error updating slave");
+                        System.out.println(data);
                     }
-
-                    JSONArray items = data.getJSONArray("items");
-                    int i = 0;
-                    for(Item item : screen.getItems()){
-                        JSONObject item_ = items.getJSONObject(i);
-                        float x = (float) item_.getDouble("x");
-                        float y = (float) item_.getDouble("y");
-                        float velocity_x = (float) item_.getDouble("velocity_x");
-                        float velocity_y = (float) item_.getDouble("velocity_y");
-                        int id = item_.getInt("id");
-
-                        item.setPos(x, y);
-
-                        item.setVelocity(velocity_x, velocity_y);
-
-                        i++;
-                    }
-
-                    JSONArray projectiles = data.getJSONArray("projectiles");
-                    i = 0;
-                    for(Projectile projectile : screen.getProjectiles()){
-
-                        JSONObject projectiles_ = projectiles.getJSONObject(i);
-                        float x = (float) projectiles_.getDouble("x");
-                        float y = (float) projectiles_.getDouble("y");
-                        float velocity_x = (float) projectiles_.getDouble("velocity_x");
-                        float velocity_y = (float) projectiles_.getDouble("velocity_y");
-                        int id = projectiles_.getInt("id");
-
-                        projectile.setPos(x, y);
-                        projectile.setVelocity(velocity_x, velocity_y);
-                        i++;
-                    }
-
-                }catch(JSONException e){
-                    Gdx.app.log("SocketIO", "Error updating slave");
-                    System.out.println(data);
                 }
             }
         }).on("newPlayer", new Emitter.Listener() {
@@ -263,33 +273,6 @@ public class GameSocket {
                     enemy.setVelocity(velocity_x, velocity_y);
                     enemy.setWeapon_on_hand(weapon_on_hand);
                     screen.getEnemies().put(newPlayer.getString("id"), enemy);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).on("selfPlayer", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                JSONObject newPlayer = (JSONObject) args[0];
-                try {
-                    JSONObject player_box2d = newPlayer.getJSONObject("player_box2d");
-                    float x = (float) player_box2d.getDouble("x");
-                    float y = (float) player_box2d.getDouble("y");
-                    float velocity_x = (float) player_box2d.getDouble("velocity_x");
-                    float velocity_y = (float) player_box2d.getDouble("velocity_y");
-
-                    JSONObject player_attribute = newPlayer.getJSONObject("player_attribute");
-                    float hit_point = (float) player_attribute.getDouble("hit_point");
-                    int weapon_on_hand = player_attribute.getInt("weapon_on_hand");
-
-                    Player player = new Player(screen, x, y);
-                    player.setHitPoint(hit_point);
-                    player.setVelocity(velocity_x, velocity_y);
-                    player.setWeapon_on_hand(weapon_on_hand);
-                    screen.setPlayer(player);
-
-                    screen.setInitialized(true);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -325,6 +308,7 @@ public class GameSocket {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     String id = data.getString("id");
+                    screen.getEnemies().get(id).destroy();
                     screen.getEnemies().remove(id);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting New PlayerID");

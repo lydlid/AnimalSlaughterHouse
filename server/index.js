@@ -27,31 +27,36 @@ io.on('connection',  function(socket){
 
     // self id
     socket.emit('socketID', { id : socket.id });
-    players_box2d[socket.id] = new player_box2d(64, 64, 0, 0);
-    players_attribute[socket.id] = new player_attribute(100, 0);
+    players_box2d[socket.id] = {x : 64, y : 64, velocity_x : 0, velocity_y : 0};
+    players_attribute[socket.id] = {hit_point : 100, weapon_on_hand : 0};
 
     // tell other clients a new player comes
     socket.broadcast.emit('newPlayer',{ id : socket.id, player_box2d : players_box2d[socket.id], player_attribute : players_attribute[socket.id] });
 
-    // tell this client to initialize its own player
-    socket.emit('selfPlayer',{ id : socket.id, player_box2d : players_box2d[socket.id], player_attribute : players_attribute[socket.id] });
-
     // when client requests update from server, this only happens when someone joins the world
-    socket.on('requestWorld', function(){
-        socket.emit('fullWorld', { players_box2d : players_box2d, players_attribute : players_attribute, items : items, projectiles : projectiles });
+    socket.on('requestWorld', async function () {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        socket.emit('fullWorld', {
+            players_box2d: players_box2d,
+            players_attribute: players_attribute,
+            items: items,
+            projectiles: projectiles
+        });
     });
 
     // get host's update
     socket.on('hostUpdate', function (data) {
-        //console.log(data);
         players_attribute = data.players_attribute;
         items = data.items;
         projectiles = data.projectiles;
         socket.broadcast.emit('slaveUpdate', { players_box2d : players_box2d, players_attribute : players_attribute, items : items, projectiles : projectiles });
+        socket.emit('hostUpdate',{ players_box2d : players_box2d})
     });
 
     socket.on('slaveUpdate', function(data){
+        //console.log(data);
         players_box2d[socket.id] = data;
+        //console.log(players_box2d);
     })
 
     socket.on('newProjectile', function (data){
@@ -61,6 +66,10 @@ io.on('connection',  function(socket){
     // if client disconnects
     socket.on('disconnect', function(){
         let id = socket.id;
+        // host disconnected
+        if(id == host_id) {
+            //socket.emit('isHost', {isHost : true});
+        }
         console.log(id + " Disconnected");
         socket.broadcast.emit('playerDisconnected',{ id : id });
         delete players_box2d[id]
@@ -69,31 +78,31 @@ io.on('connection',  function(socket){
     });
 });
 
-function virtual_entity(x, y, velocity_x, velocity_y){
-    this.x = x
-    this.y = y;
-    this.velocity_x = velocity_x;
-    this.velocity_y = velocity_y;
-}
-
-function player_box2d(x, y, velocity_x, velocity_y){
-    this.x = x
-    this.y = y;
-    this.velocity_x = velocity_x;
-    this.velocity_y = velocity_y;
-}
-
-function player_attribute(hit_point, weapon_on_hand){
-    this.hit_point = hit_point;
-    this.weapon_on_hand = weapon_on_hand;
-}
-
-function item(x, y, velocity_x, velocity_y, id){
-    virtual_entity.call(x, y, velocity_x, velocity_y);
-    this.id = id;
-}
-
-function projectile(x, y, velocity_x, velocity_y){
-    virtual_entity.call(x, y, velocity_x, velocity_y);
-    this.id = id;
-}
+// function virtual_entity(x, y, velocity_x, velocity_y){
+//     this.x = x
+//     this.y = y;
+//     this.velocity_x = velocity_x;
+//     this.velocity_y = velocity_y;
+// }
+//
+// function player_box2d(x, y, velocity_x, velocity_y){
+//     this.x = x
+//     this.y = y;
+//     this.velocity_x = velocity_x;
+//     this.velocity_y = velocity_y;
+// }
+//
+// function player_attribute(hit_point, weapon_on_hand){
+//     this.hit_point = hit_point;
+//     this.weapon_on_hand = weapon_on_hand;
+// }
+//
+// function item(x, y, velocity_x, velocity_y, id){
+//     virtual_entity.call(x, y, velocity_x, velocity_y);
+//     this.id = id;
+// }
+//
+// function projectile(x, y, velocity_x, velocity_y){
+//     virtual_entity.call(x, y, velocity_x, velocity_y);
+//     this.id = id;
+// }
