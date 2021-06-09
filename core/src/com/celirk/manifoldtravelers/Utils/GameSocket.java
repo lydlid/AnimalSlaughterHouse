@@ -146,6 +146,35 @@ public class GameSocket {
                     System.out.println(data);
                 }
             }
+        }).on("hostUpdate", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    JSONObject players_box2d = data.getJSONObject("players_box2d");
+                    JSONObject players_attribute = data.getJSONObject("players_attribute");
+                    Iterator<String> keys = players_box2d.keys();
+                    while(keys.hasNext()) {
+                        String key = keys.next();
+                        JSONObject player_box2d = players_box2d.getJSONObject(key);
+                        float x = (float) player_box2d.getDouble("x");
+                        float y = (float) player_box2d.getDouble("y");
+                        float velocity_x = (float) player_box2d.getDouble("velocity_x");
+                        float velocity_y = (float) player_box2d.getDouble("velocity_y");
+
+                        if(socket_id.equals(key)) {
+                            continue;
+                        }
+                        Player enemy = screen.getEnemies().get(key);
+                        enemy.setPos(x, y);
+                        enemy.setVelocity(velocity_x, velocity_y);
+                        screen.getEnemies().put(key, enemy);
+                    }
+                }catch(JSONException e){
+                    Gdx.app.log("SocketIO", "Error updating host");
+                    System.out.println(data);
+                }
+            }
         }).on("slaveUpdate", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -177,47 +206,40 @@ public class GameSocket {
                     }
 
                     JSONArray items = data.getJSONArray("items");
-                    for(int i = 0; i < items.length(); i++){
+                    int i = 0;
+                    for(Item item : screen.getItems()){
                         JSONObject item_ = items.getJSONObject(i);
                         float x = (float) item_.getDouble("x");
                         float y = (float) item_.getDouble("y");
                         float velocity_x = (float) item_.getDouble("velocity_x");
                         float velocity_y = (float) item_.getDouble("velocity_y");
                         int id = item_.getInt("id");
-                        Item item;
-                        switch (id) {
-                            case 1:
-                                item = new Pistol(screen, x, y);
-                                break;
-                            default:
-                                throw new IllegalStateException("Unexpected value: " + id);
-                        }
+
+                        item.setPos(x, y);
 
                         item.setVelocity(velocity_x, velocity_y);
-                        screen.appendItem(item);
+
+                        i++;
                     }
 
                     JSONArray projectiles = data.getJSONArray("projectiles");
-                    for(int i = 0; i < items.length(); i++){
+                    i = 0;
+                    for(Projectile projectile : screen.getProjectiles()){
+
                         JSONObject projectiles_ = projectiles.getJSONObject(i);
                         float x = (float) projectiles_.getDouble("x");
                         float y = (float) projectiles_.getDouble("y");
                         float velocity_x = (float) projectiles_.getDouble("velocity_x");
                         float velocity_y = (float) projectiles_.getDouble("velocity_y");
                         int id = projectiles_.getInt("id");
-                        Projectile projectile;
-                        switch (id) {
-                            case 1:
-                                projectile = new PistolBullet(screen, x, y, new Vector2(velocity_x,velocity_y));
-                                break;
-                            default:
-                                throw new IllegalStateException("Unexpected value: " + id);
-                        }
-                        screen.appendProjectile(projectile);
+
+                        projectile.setPos(x, y);
+                        projectile.setVelocity(velocity_x, velocity_y);
+                        i++;
                     }
 
                 }catch(JSONException e){
-                    Gdx.app.log("SocketIO", "Error getting world");
+                    Gdx.app.log("SocketIO", "Error updating slave");
                     System.out.println(data);
                 }
             }
@@ -315,12 +337,12 @@ public class GameSocket {
         try {
             JSONObject jsonObject = new JSONObject();
 
-            JSONObject players_json = new JSONObject();
-            players_json.put(socket_id, screen.getPlayer().getJsonAttribute());
+            JSONObject players_attribute = new JSONObject();
+            players_attribute.put(socket_id, screen.getPlayer().getJsonAttribute());
             for (HashMap.Entry<String, Player> entry : screen.getEnemies().entrySet()) {
-                players_json.put(entry.getKey(), entry.getValue().getJsonAttribute());
+                players_attribute.put(entry.getKey(), entry.getValue().getJsonAttribute());
             }
-            jsonObject.put("players_attribute", players_json);
+            jsonObject.put("players_attribute", players_attribute);
 
             JSONArray items_json = new JSONArray();
             for (Item item : screen.getItems()) {

@@ -79,4 +79,12 @@ public class Projectile extends Sprite {
         }
         return jsonObject;
     }
+
+    public void setPos(float x, float y) {
+        body.setTransform(x / ManifoldTravelers.PPM,y / ManifoldTravelers.PPM,0);
+    }
+
+    public void setVelocity(float x, float y) {
+        body.setLinearVelocity(x, y);
+    }
 }
