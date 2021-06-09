@@ -98,12 +98,14 @@ public class GameSocket {
                             player.setHitPoint(hit_point);
                             player.setVelocity(velocity_x, velocity_y);
                             player.setWeapon_on_hand(weapon_on_hand);
+                            player.setId(key);
                             screen.setPlayer(player);
                         } else {
                             Player enemy = new Player(screen, x, y);
                             enemy.setHitPoint(hit_point);
                             enemy.setVelocity(velocity_x, velocity_y);
                             enemy.setWeapon_on_hand(weapon_on_hand);
+                            enemy.setId(key);
                             screen.getEnemies().put(key, enemy);
                         }
                     }
@@ -160,7 +162,6 @@ public class GameSocket {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     JSONObject players_box2d = data.getJSONObject("players_box2d");
-                    JSONObject players_attribute = data.getJSONObject("players_attribute");
                     Iterator<String> keys = players_box2d.keys();
                     while(keys.hasNext()) {
                         String key = keys.next();
@@ -181,6 +182,7 @@ public class GameSocket {
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error updating host");
                     System.out.println(data);
+                    System.out.println(e);
                 }
             }
         }).on("slaveUpdate", new Emitter.Listener() {
@@ -204,14 +206,17 @@ public class GameSocket {
                             int weapon_on_hand = player_attribute.getInt("weapon_on_hand");
 
                             if (socket_id.equals(key)) {
-                                continue;
+                                Player player = screen.getPlayer();
+                                player.setHitPoint(hit_point);
+                                player.setWeapon_on_hand(weapon_on_hand);
                             }
-
-                            Player enemy = screen.getEnemies().get(key);
-                            enemy.setPos(x, y);
-                            enemy.setHitPoint(hit_point);
-                            enemy.setVelocity(velocity_x, velocity_y);
-                            enemy.setWeapon_on_hand(weapon_on_hand);
+                            else {
+                                Player enemy = screen.getEnemies().get(key);
+                                enemy.setPos(x, y);
+                                enemy.setHitPoint(hit_point);
+                                enemy.setVelocity(velocity_x, velocity_y);
+                                enemy.setWeapon_on_hand(weapon_on_hand);
+                            }
                         }
 
                         JSONArray items = data.getJSONArray("items");
@@ -225,17 +230,14 @@ public class GameSocket {
                             int id = item_.getInt("id");
 
                             item.setPos(x, y);
-
                             item.setVelocity(velocity_x, velocity_y);
-
                             i++;
                         }
 
                         JSONArray projectiles = data.getJSONArray("projectiles");
-                        i = 0;
+                        int j = 0;
                         for (Projectile projectile : screen.getProjectiles()) {
-
-                            JSONObject projectiles_ = projectiles.getJSONObject(i);
+                            JSONObject projectiles_ = projectiles.getJSONObject(j);
                             float x = (float) projectiles_.getDouble("x");
                             float y = (float) projectiles_.getDouble("y");
                             float velocity_x = (float) projectiles_.getDouble("velocity_x");
@@ -244,12 +246,13 @@ public class GameSocket {
 
                             projectile.setPos(x, y);
                             projectile.setVelocity(velocity_x, velocity_y);
-                            i++;
+                            j++;
                         }
 
                     } catch (JSONException e) {
                         Gdx.app.log("SocketIO", "Error updating slave");
                         System.out.println(data);
+                        System.out.println(e);
                     }
                 }
             }
@@ -263,6 +266,7 @@ public class GameSocket {
                     float y = (float) player_box2d.getDouble("y");
                     float velocity_x = (float) player_box2d.getDouble("velocity_x");
                     float velocity_y = (float) player_box2d.getDouble("velocity_y");
+                    String id = newPlayer.getString("id");
 
                     JSONObject player_attribute = newPlayer.getJSONObject("player_attribute");
                     float hit_point = (float) player_attribute.getDouble("hit_point");
@@ -272,7 +276,8 @@ public class GameSocket {
                     enemy.setHitPoint(hit_point);
                     enemy.setVelocity(velocity_x, velocity_y);
                     enemy.setWeapon_on_hand(weapon_on_hand);
-                    screen.getEnemies().put(newPlayer.getString("id"), enemy);
+                    enemy.setId(id);
+                    screen.getEnemies().put(id, enemy);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -287,12 +292,11 @@ public class GameSocket {
                     float y = (float) projectile.getDouble("y");
                     float velocity_x = (float) projectile.getDouble("velocity_x");
                     float velocity_y = (float) projectile.getDouble("velocity_y");
-                    float attack = (float) projectile.getDouble("attack");
                     int id = projectile.getInt("id");
                     Projectile projectile_;
                     switch (id) {
                         case 1:
-                            projectile_ = new PistolBullet(screen, x, y, new Vector2(velocity_x,velocity_y));
+                            projectile_ = new PistolBullet(screen, x, y, new Vector2(velocity_x, velocity_y));
                             break;
                         default:
                             throw new IllegalStateException("Unexpected value: " + id);
@@ -309,7 +313,6 @@ public class GameSocket {
                 try {
                     String id = data.getString("id");
                     screen.getEnemies().get(id).destroy();
-                    screen.getEnemies().remove(id);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error getting New PlayerID");
                 }

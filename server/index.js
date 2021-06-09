@@ -35,7 +35,7 @@ io.on('connection',  function(socket){
 
     // when client requests update from server, this only happens when someone joins the world
     socket.on('requestWorld', async function () {
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 200));
         socket.emit('fullWorld', {
             players_box2d: players_box2d,
             players_attribute: players_attribute,
