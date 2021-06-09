@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -25,17 +24,8 @@ import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 import com.celirk.manifoldtravelers.Utils.B2WorldCreator;
 import com.celirk.manifoldtravelers.Utils.GameSocket;
 import com.celirk.manifoldtravelers.Utils.WorldContactListener;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import io.socket.client.IO;
-import io.socket.client.Socket;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
@@ -172,8 +162,18 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt) {
-        // maybe useless for slaves?
+        if (isInitialized && socket.needUpdate()) {
+            if (socket.isHost()) {
+                // System.out.println("update");
+                socket.hostUpdateFromBuffer();
+            } else {
+                socket.slaveUpdateFromBuffer();
+            }
+            socket.setNeedUpdate(false);
+        }
+
         world.step(dt, 6, 2);
+
         if(isInitialized) {
             handleInput(dt);
             player.update(dt);
@@ -198,12 +198,12 @@ public class PlayScreen implements Screen {
                 spawner.update(dt);
             }
             if(isInitialized){
-                socket.hostUpdate();
-                socket.slaveUpdate();
+                socket.pushHostUpdate();
+                socket.pushSlaveUpdate();
             }
         } else {
             if(isInitialized) {
-                socket.slaveUpdate();
+                socket.pushSlaveUpdate();
                 //System.out.println(enemies.size());
             }
         }

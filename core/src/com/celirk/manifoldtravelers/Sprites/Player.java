@@ -86,7 +86,7 @@ public class Player extends Sprite {
         playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
         //create texture for dead player
-        playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
+        playerDead = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
         definePlayer(x, y);
         defineUtils();
@@ -241,8 +241,8 @@ public class Player extends Sprite {
             velocity.scl(5);
 
             Projectile projectile = new PistolBullet(screen,
-                    body.getPosition().x + direction.x,
-                    body.getPosition().y + direction.y,
+                    (body.getPosition().x + direction.x) * ManifoldTravelers.PPM,
+                    (body.getPosition().y + direction.y) * ManifoldTravelers.PPM,
                     velocity.add(body.getLinearVelocity()));
 
             screen.appendProjectile(projectile);

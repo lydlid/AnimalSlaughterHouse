@@ -60,7 +60,8 @@ io.on('connection',  function(socket){
     })
 
     socket.on('newProjectile', function (data){
-        socket.broadcast.emit('newProjectile', data);
+        //socket.broadcast.emit('newProjectile', data);
+        io.to(host_id).emit('newProjectile', data);
     });
 
     // if client disconnects

@@ -1,6 +1,7 @@
 package com.celirk.manifoldtravelers.Sprites.Tile.Spawner;
 
 import com.badlogic.gdx.maps.MapObject;
+import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
 import com.celirk.manifoldtravelers.Sprites.Item.Pistol;
 
@@ -12,7 +13,7 @@ public class WeaponSpawner extends Spawner {
 
     @Override
     protected void Spawn() {
-        screen.appendItem(new Pistol(screen, body.getPosition().x, body.getPosition().y));
+        screen.appendItem(new Pistol(screen, body.getPosition().x * ManifoldTravelers.PPM, body.getPosition().y * ManifoldTravelers.PPM));
     }
 
 }

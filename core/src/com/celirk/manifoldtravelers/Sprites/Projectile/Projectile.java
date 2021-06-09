@@ -29,7 +29,7 @@ public class Projectile extends Sprite {
         setBounds(getX(), getY(), 1/ ManifoldTravelers.PPM, 1/ManifoldTravelers.PPM);
 
         BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
+        bdef.position.set(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(bdef);
         body.setBullet(true);
@@ -68,9 +68,8 @@ public class Projectile extends Sprite {
     public JSONObject getJson() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("x", getX()*ManifoldTravelers.PPM);
-
-            jsonObject.put("y", getY()*ManifoldTravelers.PPM);
+            jsonObject.put("x", body.getPosition().x * ManifoldTravelers.PPM);
+            jsonObject.put("y", body.getPosition().y * ManifoldTravelers.PPM);
             jsonObject.put("velocity_x", body.getLinearVelocity().x);
             jsonObject.put("velocity_y", body.getLinearVelocity().y);
             jsonObject.put("attack", attack);
@@ -87,5 +86,9 @@ public class Projectile extends Sprite {
 
     public void setVelocity(float x, float y) {
         body.setLinearVelocity(x, y);
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

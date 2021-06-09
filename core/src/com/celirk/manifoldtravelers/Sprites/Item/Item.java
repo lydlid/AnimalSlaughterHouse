@@ -13,7 +13,7 @@ public abstract class Item extends Sprite {
     protected Body body;
     protected FixtureDef fdef;
 
-    public int id;
+    protected int id;
 
     protected boolean toDestroy;
     protected boolean destroyed;
@@ -26,7 +26,7 @@ public abstract class Item extends Sprite {
         setBounds(getX(), getY(), 5/ManifoldTravelers.PPM, 5/ManifoldTravelers.PPM);
 
         BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
+        bdef.position.set(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         bdef.linearDamping = 10;
         body = world.createBody(bdef);
@@ -63,9 +63,8 @@ public abstract class Item extends Sprite {
     public JSONObject getJson() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("x", getX()*ManifoldTravelers.PPM);
-
-            jsonObject.put("y", getY()*ManifoldTravelers.PPM);
+            jsonObject.put("x", body.getPosition().x * ManifoldTravelers.PPM);
+            jsonObject.put("y", body.getPosition().y * ManifoldTravelers.PPM);
             jsonObject.put("velocity_x", body.getLinearVelocity().x);
             jsonObject.put("velocity_y", body.getLinearVelocity().y);
             jsonObject.put("id", id);
@@ -81,5 +80,9 @@ public abstract class Item extends Sprite {
 
     public void setPos(float x, float y) {
         body.setTransform(x / ManifoldTravelers.PPM,y / ManifoldTravelers.PPM,0);
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
