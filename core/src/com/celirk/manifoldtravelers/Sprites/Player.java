@@ -1,5 +1,6 @@
 package com.celirk.manifoldtravelers.Sprites;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -86,14 +87,13 @@ public class Player extends Sprite {
         playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
         //create texture for dead player
-        playerMove = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
+        playerDead = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
         definePlayer(x, y);
         defineUtils();
 
         setBounds(0,0,32,32);
         setRegion(playerMove);
-
     }
 
     private void definePlayer(float x, float y) {
@@ -281,9 +281,11 @@ public class Player extends Sprite {
         }
         return jsonObject;
     }
+
     public void setPos(float x, float y) {
         body.setTransform(x / ManifoldTravelers.PPM,y / ManifoldTravelers.PPM,0);
     }
+
     public Body getbody() {
         return body;
     }

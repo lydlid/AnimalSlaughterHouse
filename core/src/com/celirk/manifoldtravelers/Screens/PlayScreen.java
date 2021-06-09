@@ -3,6 +3,7 @@ package com.celirk.manifoldtravelers.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -70,6 +71,8 @@ public class PlayScreen implements Screen {
 
     private boolean isInitialized;
 
+    private Music music;
+
 
     public PlayScreen(ManifoldTravelers game) {
         isInitialized = false;
@@ -106,6 +109,10 @@ public class PlayScreen implements Screen {
         projectiles = new Array<Projectile>(false, 128);
 
         socket = new GameSocket(this);
+
+        music = ManifoldTravelers.manager.get("audio/music/mario_music.ogg", Music.class);
+        music.setLooping(true);
+        music.play();
     }
 
     public TextureAtlas getAtlas(){
