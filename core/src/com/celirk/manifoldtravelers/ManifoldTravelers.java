@@ -52,6 +52,8 @@ public class ManifoldTravelers extends Game {
         manager.load("audio/sounds/pistol_shoot.wav", Sound.class);
         manager.load("audio/sounds/pistol_reload.wav", Sound.class);
         manager.load("audio/sounds/bump.wav", Sound.class);
+        manager.load("audio/sounds/getHit.wav", Sound.class);
+        manager.load("audio/sounds/die.wav", Sound.class);
         manager.load("audio/sounds/breakblock.wav", Sound.class);
         manager.finishLoading();
 
