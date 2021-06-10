@@ -44,6 +44,7 @@ public class GameSocket {
         try{
 
             socket = IO.socket("http://localhost:5432");
+            //socket = IO.socket("http://10.46.180.92:5432");
             //socket = IO.socket("http://10.44.64.238:5432");
             socket.connect();
         }catch (Exception e){
@@ -63,7 +64,6 @@ public class GameSocket {
                 //System.out.println(data);
                 try {
                     isHost = data.getBoolean("isHost");
-                    //System.out.println(isHost);
                 }catch(JSONException e){
                     Gdx.app.log("SocketIO", "Error checking host");
                 }
@@ -84,7 +84,6 @@ public class GameSocket {
             public void call(Object... args) {
 
                 JSONObject data = (JSONObject) args[0];
-                System.out.println(data);
                 try {
                     JSONObject players_box2d = data.getJSONObject("players_box2d");
                     JSONObject players_attribute = data.getJSONObject("players_attribute");
