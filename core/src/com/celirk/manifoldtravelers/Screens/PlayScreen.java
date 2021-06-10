@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Scenes.Hud;
 import com.celirk.manifoldtravelers.Sprites.Item.Item;
+import com.celirk.manifoldtravelers.Sprites.Item.Pistol;
 import com.celirk.manifoldtravelers.Sprites.Player;
 import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
 import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
@@ -135,6 +136,10 @@ public class PlayScreen implements Screen {
                 if(entry.getValue().getHit_point()>0)
                     entry.getValue().draw(game.batch);
             }
+        }
+        //draw weapon pack
+        for(Item item : items){
+            item.draw(game.batch);
         }
         //draw bullet
         for(Projectile projectile : projectiles){
