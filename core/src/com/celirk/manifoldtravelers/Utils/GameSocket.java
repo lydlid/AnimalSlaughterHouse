@@ -213,7 +213,6 @@ public class GameSocket {
             @Override
             public void call(Object... args) {
                 JSONObject projectile = (JSONObject) args[0];
-                System.out.println(projectile);
                 try {
                     float x = (float) projectile.getDouble("x");
                     float y = (float) projectile.getDouble("y");

@@ -111,7 +111,7 @@ public class PlayScreen implements Screen {
 
         socket = new GameSocket(this);
 
-        music = ManifoldTravelers.manager.get("audio/music/mario_music.ogg", Music.class);
+        music = ManifoldTravelers.manager.get("audio/music/bgm.ogg", Music.class);
         music.setLooping(true);
         music.play();
     }
