@@ -10,6 +10,8 @@ import com.celirk.manifoldtravelers.Sprites.Item.Pistol;
 import com.celirk.manifoldtravelers.Sprites.Player;
 import com.celirk.manifoldtravelers.Sprites.Projectile.PistolBullet;
 import com.celirk.manifoldtravelers.Sprites.Projectile.Projectile;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -25,11 +27,13 @@ public class GameSocket {
     private PlayScreen screen;
     private boolean isHost;
     private String socket_id;
+    private TextureAtlas gunPack;
 
     private JSONObject buffer;
     private boolean needUpdate = false;
 
-    public GameSocket(PlayScreen screen) {
+    public GameSocket(PlayScreen screen, TextureAtlas gunPack) {
+        this.gunPack = gunPack;
         this.screen = screen;
 
         connectSocket();
@@ -128,7 +132,8 @@ public class GameSocket {
                         Item item;
                         switch (id) {
                             case 1:
-                                item = new Pistol(screen, x, y);
+                                //TextureAtlas gunPack = new TextureAtlas("weapon/weapon.pack");
+                                item = new Pistol(screen, x, y, gunPack);// 这里不能new Texture，有什么办法改一改
                                 break;
                             default:
                                 throw new IllegalStateException("Unexpected value: " + id);
@@ -350,7 +355,7 @@ public class GameSocket {
                 Item item;
                 switch (id) {
                     case 1:
-                        item = new Pistol(screen, x, y);
+                        item = new Pistol(screen, x, y, gunPack);
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + id);
