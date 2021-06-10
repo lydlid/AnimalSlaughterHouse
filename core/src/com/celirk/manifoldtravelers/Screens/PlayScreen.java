@@ -194,19 +194,19 @@ public class PlayScreen implements Screen {
         if(isInitialized) {
             handleInput(dt);
             player.update(dt);
-        }
-        for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
-            entry.getValue().update(dt);
-        }
 
-        for(Projectile projectile : projectiles){
-            projectile.update(dt);
-        }
+            for (HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+                entry.getValue().update(dt);
+            }
 
-        for(Item item : items){
-            item.update(dt);
-        }
+            for (Projectile projectile : projectiles) {
+                projectile.update(dt);
+            }
 
+            for (Item item : items) {
+                item.update(dt);
+            }
+        }
 
         //n_frames_without_update++;
         // update with server

@@ -15,7 +15,7 @@ public class Pistol extends Item {
         super(screen, x, y);
         id = 1;
         System.out.println("lq 0000");
-        // 这一句不行
+
         gunPack = new TextureAtlas("weapon/weapon.pack");
         System.out.println("lq 1111");
         gunPic = new TextureRegion(gunPack.findRegion("Enfield"),
