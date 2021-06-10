@@ -34,10 +34,6 @@ import java.util.HashMap;
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
 
-    public TextureAtlas getGunPack() {
-        return gunPack;
-    }
-
     private TextureAtlas gunPack;
 
     private GameSocket socket;
@@ -332,5 +328,8 @@ public class PlayScreen implements Screen {
         return socket;
     }
 
+    public TextureAtlas getGunPack() {
+        return gunPack;
+    }
 
 }
