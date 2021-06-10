@@ -41,7 +41,7 @@ public class GameSocket {
     public void connectSocket(){
         try{
             //socket = IO.socket("http://localhost:5432");
-            socket = IO.socket("http://10.44.64.238:5432");
+            socket = IO.socket("http://localhost:5432");
             socket.connect();
         }catch (Exception e){
             System.out.println(e);
