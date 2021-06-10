@@ -71,6 +71,7 @@ public class PlayScreen implements Screen {
     public PlayScreen(ManifoldTravelers game) {
         isInitialized = false;
 
+        //defination at same palce
         atlas = new TextureAtlas("animalWithBullet.pack");
         gunPack = new TextureAtlas("weapon/weapon.pack");
 
@@ -103,7 +104,7 @@ public class PlayScreen implements Screen {
 
         projectiles = new Array<Projectile>(false, 128);
 
-        socket = new GameSocket(this, gunPack);
+        socket = new GameSocket(this);
 
         music = ManifoldTravelers.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);

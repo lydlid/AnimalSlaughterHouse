@@ -27,13 +27,11 @@ public class GameSocket {
     private PlayScreen screen;
     private boolean isHost;
     private String socket_id;
-    private TextureAtlas gunPack;
 
     private JSONObject buffer;
     private boolean needUpdate = false;
 
-    public GameSocket(PlayScreen screen, TextureAtlas gunPack) {
-        this.gunPack = gunPack;
+    public GameSocket(PlayScreen screen) {
         this.screen = screen;
 
         connectSocket();
@@ -133,7 +131,7 @@ public class GameSocket {
                         switch (id) {
                             case 1:
                                 //TextureAtlas gunPack = new TextureAtlas("weapon/weapon.pack");
-                                item = new Pistol(screen, x, y, gunPack);// 这里不能new Texture，有什么办法改一改
+                                item = new Pistol(screen, x, y);// 这里不能new Texture，有什么办法改一改
                                 break;
                             default:
                                 throw new IllegalStateException("Unexpected value: " + id);
@@ -355,7 +353,7 @@ public class GameSocket {
                 Item item;
                 switch (id) {
                     case 1:
-                        item = new Pistol(screen, x, y, gunPack);
+                        item = new Pistol(screen, x, y);
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + id);
