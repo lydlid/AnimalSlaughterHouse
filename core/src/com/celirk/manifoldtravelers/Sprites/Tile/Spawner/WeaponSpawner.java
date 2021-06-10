@@ -13,7 +13,7 @@ public class WeaponSpawner extends Spawner {
 
     @Override
     protected void Spawn() {
-        screen.appendItem(new Pistol(screen, body.getPosition().x * ManifoldTravelers.PPM, body.getPosition().y * ManifoldTravelers.PPM));
+        screen.appendItem(new Pistol(screen, body.getPosition().x * ManifoldTravelers.PPM, body.getPosition().y * ManifoldTravelers.PPM, screen.gunPack));
     }
 
 }

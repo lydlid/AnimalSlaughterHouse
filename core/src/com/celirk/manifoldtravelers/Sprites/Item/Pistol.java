@@ -11,12 +11,12 @@ public class Pistol extends Item {
     private TextureRegion gunPic;
     private TextureAtlas gunPack;
 
-    public Pistol(PlayScreen screen, float x, float y) {
+    public Pistol(PlayScreen screen, float x, float y, TextureAtlas gunPack) {
         super(screen, x, y);
         id = 1;
         System.out.println("lq 0000");
         // 这一句不行
-        gunPack = new TextureAtlas("weapon/weapon.pack");
+        this.gunPack = gunPack;
         System.out.println("lq 1111");
         gunPic = new TextureRegion(gunPack.findRegion("Enfield"),
                 0,0,32,19);
@@ -27,6 +27,7 @@ public class Pistol extends Item {
 
     @Override
     public void update(float dt) {
+        setPosition();
         setRegion(gunPic);
         super.update(dt);
     }

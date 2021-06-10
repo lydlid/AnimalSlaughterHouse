@@ -33,6 +33,7 @@ import java.util.HashMap;
 
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
+    public TextureAtlas gunPack;
 
     private GameSocket socket;
 
@@ -71,6 +72,7 @@ public class PlayScreen implements Screen {
         isInitialized = false;
 
         atlas = new TextureAtlas("animalWithBullet.pack");
+        gunPack = new TextureAtlas("weapon/weapon.pack");
 
         this.game = game;
 
@@ -101,7 +103,7 @@ public class PlayScreen implements Screen {
 
         projectiles = new Array<Projectile>(false, 128);
 
-        socket = new GameSocket(this);
+        socket = new GameSocket(this, gunPack);
 
         music = ManifoldTravelers.manager.get("audio/music/mario_music.ogg", Music.class);
         music.setLooping(true);
