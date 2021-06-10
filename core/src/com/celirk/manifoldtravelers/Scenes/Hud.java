@@ -61,9 +61,9 @@ public class Hud implements Disposable {
     }
 
     public void update(float dt){
-        FPSLabel.setText(String.format("FPS: %2d", round(1 / dt)));
+        FPSLabel.setText("FPS: " + round(1 / dt));
         try {
-            hostLabel.setText(String.format("Host:%b", screen.getSocket().isHost()));
+            hostLabel.setText("Host:" + screen.getSocket().isHost());
         }catch (Exception e) {
 
         }
