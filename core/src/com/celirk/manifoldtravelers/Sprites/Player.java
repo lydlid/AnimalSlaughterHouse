@@ -233,6 +233,7 @@ public class Player extends Sprite {
                 1,
                 (body.getPosition().x - screen.getPlayer().body.getPosition().x)/100
         );
+        screen.appendParticleEffect();
         hit_point -= delta_hp;
         if(hit_point <= 0){
             ManifoldTravelers.manager.get("audio/sounds/die.wav", Sound.class).play(

@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -72,13 +74,20 @@ public class PlayScreen implements Screen {
 
     private Music music;
 
+    private Array<ParticleEffect> particle_effects;
+    private ParticleEffect blood_effect;
+
 
     public PlayScreen(ManifoldTravelers game) {
         isInitialized = false;
 
-        //defination at same palce
+        // definition at same palce
         atlas = new TextureAtlas("animalWithBullet.pack");
         gunPack = new TextureAtlas("weapon/weapon.pack");
+
+        particle_effects = new Array<ParticleEffect>();
+        blood_effect = new ParticleEffect();
+        blood_effect.load(Gdx.files.internal("ParticleEffects/blood.p"), Gdx.files.internal("./ParticleEffects"));
 
         this.game = game;
 
@@ -153,6 +162,11 @@ public class PlayScreen implements Screen {
         for(Projectile projectile : projectiles){
             projectile.draw(game.batch);
         }
+        // draw particles
+        for(ParticleEffect effect : particle_effects) {
+            effect.draw(game.batch, delta);
+        }
+
 
         game.batch.end();
 
@@ -332,5 +346,7 @@ public class PlayScreen implements Screen {
         return socket;
     }
 
-
+    public void appendParticleEffect() {
+        particle_effects.add( blood_effect);
+    }
 }

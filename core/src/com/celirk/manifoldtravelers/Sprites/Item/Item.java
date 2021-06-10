@@ -22,7 +22,7 @@ public abstract class Item extends Sprite {
         this.screen = screen;
         this.world = screen.getWorld();
 
-        setBounds(getX(), getY(), 5/ManifoldTravelers.PPM, 5/ManifoldTravelers.PPM);
+        setBounds(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM, 5/ManifoldTravelers.PPM, 5/ManifoldTravelers.PPM);
 
         BodyDef bdef = new BodyDef();
         bdef.position.set(x / ManifoldTravelers.PPM, y / ManifoldTravelers.PPM);
