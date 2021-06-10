@@ -25,7 +25,6 @@ public class Projectile extends Sprite {
         this.screen = screen;
         this.world = screen.getWorld();
 
-        setPosition(x, y);
         setBounds(getX(), getY(), 1/ ManifoldTravelers.PPM, 1/ManifoldTravelers.PPM);
 
         BodyDef bdef = new BodyDef();

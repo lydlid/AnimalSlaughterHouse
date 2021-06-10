@@ -22,7 +22,6 @@ public abstract class Item extends Sprite {
         this.screen = screen;
         this.world = screen.getWorld();
 
-        setPosition(x, y);
         setBounds(getX(), getY(), 5/ManifoldTravelers.PPM, 5/ManifoldTravelers.PPM);
 
         BodyDef bdef = new BodyDef();
@@ -50,6 +49,8 @@ public abstract class Item extends Sprite {
             destroyed = true;
             screen.removeItem(this);
         }
+        setPosition((body.getPosition().x-screen.getPlayer().body.getPosition().x)*ManifoldTravelers.PPM + getWidth()/2 + ManifoldTravelers.V_WIDTH/2 - screen.getPlayer().getWidth()/2,
+                (body.getPosition().y-screen.getPlayer().body.getPosition().y)*ManifoldTravelers.PPM + getHeight()/2 + ManifoldTravelers.V_HEIGHT/2 - screen.getPlayer().getHeight()/2);
     }
 
     public int getID() {
