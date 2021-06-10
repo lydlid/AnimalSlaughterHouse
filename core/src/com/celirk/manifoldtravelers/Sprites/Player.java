@@ -217,26 +217,28 @@ public class Player extends Sprite {
                 attack_time = 1;
                 attack_time_segment = 0.5F;
                 ManifoldTravelers.manager.get("audio/sounds/pistol_reload.wav", Sound.class).play(
-                        1 - screen.getPlayer().body.getPosition().dst(body.getPosition()),
-                        0,
-                        body.getPosition().x - screen.getPlayer().body.getPosition().x
+                        1 - screen.getPlayer().body.getPosition().dst(body.getPosition())/100,
+                        1,
+                        (body.getPosition().x - screen.getPlayer().body.getPosition().x)/100
                 );
+                System.out.println(body.getPosition().x - screen.getPlayer().body.getPosition().x);
+                break;
         }
         weapon_on_hand = id;
     }
 
     public void hit(float delta_hp) {
         ManifoldTravelers.manager.get("audio/sounds/getHit.wav", Sound.class).play(
-                1 - screen.getPlayer().body.getPosition().dst(body.getPosition()),
-                0,
-                body.getPosition().x - screen.getPlayer().body.getPosition().x
+                1 - screen.getPlayer().body.getPosition().dst(body.getPosition())/100,
+                1,
+                (body.getPosition().x - screen.getPlayer().body.getPosition().x)/100
         );
         hit_point -= delta_hp;
         if(hit_point <= 0){
             ManifoldTravelers.manager.get("audio/sounds/die.wav", Sound.class).play(
-                    1 - screen.getPlayer().body.getPosition().dst(body.getPosition()),
-                    0,
-                    body.getPosition().x - screen.getPlayer().body.getPosition().x
+                    1 - screen.getPlayer().body.getPosition().dst(body.getPosition())/100,
+                    1,
+                    (body.getPosition().x - screen.getPlayer().body.getPosition().x)/100
             );
             playerIsDead = true;
         }
