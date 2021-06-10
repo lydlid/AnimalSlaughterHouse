@@ -33,7 +33,12 @@ import java.util.HashMap;
 
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
-    public TextureAtlas gunPack;
+
+    public TextureAtlas getGunPack() {
+        return gunPack;
+    }
+
+    private TextureAtlas gunPack;
 
     private GameSocket socket;
 

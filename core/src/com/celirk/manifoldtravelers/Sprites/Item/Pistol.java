@@ -14,7 +14,7 @@ public class Pistol extends Item {
     public Pistol(PlayScreen screen, float x, float y) {
         super(screen, x, y);
         id = 1;
-        this.gunPack = screen.gunPack;
+        this.gunPack = screen.getGunPack();
         gunPic = new TextureRegion(gunPack.findRegion("Enfield"),
                 0,0,32,19);
         setBounds(x-getWidth()*100,y-getHeight()*100,16,9.5F);
