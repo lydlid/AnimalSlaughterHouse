@@ -68,8 +68,11 @@ io.on('connection',  function(socket){
     socket.on('disconnect', function(){
         let id = socket.id;
         // host disconnected
-        if(id == host_id) {
-            //socket.emit('isHost', {isHost : true});
+        if(id === host_id) {
+            let new_host_id = Object.keys(players_box2d)[Math.floor(Math.random()*Object.keys(players_box2d).length)];
+            io.to(new_host_id).emit('isHost', {isHost : true});
+            console.log(new_host_id);
+            host_id = new_host_id;
         }
         console.log(id + " Disconnected");
         socket.broadcast.emit('playerDisconnected',{ id : id });

@@ -16,11 +16,11 @@ public class PistolBullet extends Projectile {
         id = 1;
         setBounds(x,y,16,16);
         setRegion(bulletPic);
-
+        System.out.println(screen.getPlayer().body.getPosition().dst(body.getPosition()));
         ManifoldTravelers.manager.get("audio/sounds/pistol_shoot.wav", Sound.class).play(
-                1 - screen.getPlayer().body.getPosition().dst(body.getPosition()),
-                0,
-                body.getPosition().x - screen.getPlayer().body.getPosition().x
+                1 - screen.getPlayer().body.getPosition().dst(body.getPosition())/100,
+                1,
+                (body.getPosition().x - screen.getPlayer().body.getPosition().x)/100
         );
     }
 

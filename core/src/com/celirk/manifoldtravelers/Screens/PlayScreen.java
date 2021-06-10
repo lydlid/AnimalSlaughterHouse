@@ -85,7 +85,7 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch, this);
 
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("l1.tmx");
+        map = mapLoader.load("tmp1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1 / ManifoldTravelers.PPM);
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
@@ -107,7 +107,7 @@ public class PlayScreen implements Screen {
 
         socket = new GameSocket(this);
 
-        music = ManifoldTravelers.manager.get("audio/music/mario_music.ogg", Music.class);
+        music = ManifoldTravelers.manager.get("audio/music/bgm.ogg", Music.class);
         music.setLooping(true);
         music.play();
     }
