@@ -19,14 +19,11 @@
 ### 1. Projectile class
 
 
-
 ### 2. implementation of online multiplayer
 
 
-
-### 3. map ploting&player、item sprite
-
-
-
+### 3. map plotting &player、item sprite
+- map: We use Tiled(https://www.mapeditor.org/)  to make our map, and loaded by class ==TmxMaPLoader==.
+- sprites: most pixelated pictures found online. All sprites  are rendered in ==PlayScreen== and some of the sprites are animated by a series of pictures.
 ### 4. bgm&sound effect
 
