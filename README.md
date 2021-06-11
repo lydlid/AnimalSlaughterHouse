@@ -1,7 +1,10 @@
 # Animal Slaughter House
 
-To run, input command
+## How to play
+To run the jar, input command
 ``java -jar .\desktop-1.0.jar [ip] ``
+You will need node.js to run the server.
+WASD to move, click to shoot.
 
 ## Brief introduction
 
@@ -18,13 +21,15 @@ To run, input command
 ![framework2](framework2.png)
 
 ## A few points to note
+### 1. Box2d physics engine
+- Our game engine uses Box2d, and there is a slight recoil when firing.
 
-### 1. Projectile class as an example of sprite
+### 2. Projectile class as an example of sprite
 
 - Everything shown in the screen is a sprite.
 - Projectile inherits from Sprite class of LibGDX.
 
-### 2. implementation of online multiplayer
+### 3. implementation of online multiplayer
 We used socket.io to implement our online multiplayer.
 We made the server using node.js to simplify the work.
 There is a host that actually update the world,
@@ -33,12 +38,12 @@ from the host.
 - For every frame, the host pack sprites in the world into 
 a json file to synchronize all clients.
 
-### 3. drawing map and sprites
+### 4. drawing map and sprites
 LibGDX offers a way to create textures for sprites.
 For each frame sprites are batched and rendered.
 - map: We use Tiled(https://www.mapeditor.org/)  to make our map,
   and loaded by class ==TmxMaPLoader==.
 - sprites: most pixelated pictures found online. 
   All sprites  are rendered in ==PlayScreen== and some of the sprites are animated by a series of pictures.
-### 4. bgm & sound effect
-
+### 5. bgm & sound effect
+We implement sound using LibGDX native libraries 
