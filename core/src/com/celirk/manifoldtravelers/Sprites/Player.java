@@ -270,8 +270,8 @@ public class Player extends Sprite {
             velocity.scl(5);
 
             Projectile projectile = new PistolBullet(screen,
-                    (body.getPosition().x + direction.x) * ManifoldTravelers.PPM,
-                    (body.getPosition().y + direction.y) * ManifoldTravelers.PPM,
+                    (body.getPosition().x + direction.x * 2) * ManifoldTravelers.PPM,
+                    (body.getPosition().y + direction.y * 2) * ManifoldTravelers.PPM,
                     velocity.add(body.getLinearVelocity()));
 
             screen.appendProjectile(projectile);

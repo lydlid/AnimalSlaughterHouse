@@ -1,30 +1,31 @@
 # Animal Slaughter House
 
-## brief introduction
+## Brief introduction
 
-- This is a small game that we have implemented based on libgdx.
-- The basic idea is a multiplayer online battle royale mode game.
+- A primitive 2D game implemented with LibGDX.
+- Features: Multiplayer, online battle-royale.
 - Basic settings
-    - Each player has an initial 100 blood.
-    - The default birth point for each player is the bottom left corner of the entire map.
-    - Each map has a few drop points where you can pick up a specific weapon. After that , you can use your current weapon to attack other players on the server.
-    - The winning condition is to kill all players on the server and the winner is the one who survives to the end.
+    - Each player has 100 HP at the beginning.
+    - Every player will be spawned in the bottom left corner of the entire map.
+    - There are a few drop points scattered in the world where you can pick up a specific weapon. After that, you can use your current weapon to attack other players on the server.
+    - Kill all players on the server and survive to the end to win!
 
-## main framework
+## Main Framework
 
 ![framework2](framework2.png)
 
-## a  few points to note
+## A few points to note
 
-### 1. Projectile class
-
+### 1. Projectile class as an example of sprite
+- everything shown in the screen is a sprite.
+- Projectile inherits from Sprite class of LibGDX
 
 
 ### 2. implementation of online multiplayer
 
 
 
-### 3. map ploting&player、item sprite
+### 3. drawing map and sprites
 
 
 
