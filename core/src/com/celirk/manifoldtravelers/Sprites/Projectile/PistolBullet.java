@@ -8,7 +8,7 @@ import com.celirk.manifoldtravelers.ManifoldTravelers;
 import com.celirk.manifoldtravelers.Screens.PlayScreen;
 
 public class PistolBullet extends Projectile {
-    private TextureRegion bulletPic;
+    private final TextureRegion bulletPic;
     public PistolBullet(PlayScreen screen, float x, float y, Vector2 velocity){
         super(screen, x, y, velocity);
         bulletPic = new TextureRegion(screen.getAtlas().findRegion("bullet"),0,0,16,16);

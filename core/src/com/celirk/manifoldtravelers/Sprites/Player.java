@@ -20,16 +20,17 @@ import org.json.JSONObject;
 import static java.lang.Math.abs;
 
 public class Player extends Sprite {
-    private TextureRegion playerMove;
-    public enum State { UP, DOWN, LEFT, RIGHT, STAND, DEAD};
+    private final TextureRegion playerMove;
+    public enum State { UP, DOWN, LEFT, RIGHT, STAND, DEAD}
+
     public State currentState;
     public State previousState;
-    private TextureRegion playerStand;
-    private TextureRegion playerDead;
-    private Animation playerUp;
-    private Animation playerDown;
-    private Animation playerLeft;
-    private Animation playerRight;
+    private final TextureRegion playerStand;
+    private final TextureRegion playerDead;
+    private final Animation playerUp;
+    private final Animation playerDown;
+    private final Animation playerLeft;
+    private final Animation playerRight;
     private float stateTimer;
     //private Integer playerDirection;//{ 0:DOWN , 1:LEFT , 2:UP , 3:RIGHT}
 
@@ -52,7 +53,7 @@ public class Player extends Sprite {
     private String id;
     private boolean playerIsDead;
 
-    private ParticleEffect blood_effect;
+    private final ParticleEffect blood_effect;
 
 
     public Player(PlayScreen screen, float x, float y) {

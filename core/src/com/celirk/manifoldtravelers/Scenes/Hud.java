@@ -16,10 +16,10 @@ import com.celirk.manifoldtravelers.Screens.PlayScreen;
 import static java.lang.Math.round;
 
 public class Hud implements Disposable {
-    private PlayScreen screen;
+    private final PlayScreen screen;
     public Stage stage;
-    private Viewport viewport;
-    private Integer worldTimer;
+    private final Viewport viewport;
+    private final Integer worldTimer;
     Label FPSLabel;
     Label hostLabel;
     Label HitPointLabel;

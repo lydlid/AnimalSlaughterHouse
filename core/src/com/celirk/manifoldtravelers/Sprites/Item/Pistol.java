@@ -8,8 +8,8 @@ import com.celirk.manifoldtravelers.Sprites.Item.Item;
 
 public class Pistol extends Item {
 
-    private TextureRegion gunPic;
-    private TextureAtlas gunPack;
+    private final TextureRegion gunPic;
+    private final TextureAtlas gunPack;
 
     public Pistol(PlayScreen screen, float x, float y) {
         super(screen, x, y);

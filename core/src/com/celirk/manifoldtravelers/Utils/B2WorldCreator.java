@@ -12,7 +12,7 @@ import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.Spawner;
 import com.celirk.manifoldtravelers.Sprites.Tile.Spawner.WeaponSpawner;
 
 public class B2WorldCreator {
-    private Array<Spawner> spawners;
+    private final Array<Spawner> spawners;
 
     public B2WorldCreator(PlayScreen screen) {
         BodyDef bdef = new BodyDef();

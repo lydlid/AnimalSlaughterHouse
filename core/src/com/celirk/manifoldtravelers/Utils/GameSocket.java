@@ -24,7 +24,7 @@ import java.util.Iterator;
 
 public class GameSocket {
     private Socket socket;
-    private PlayScreen screen;
+    private final PlayScreen screen;
     private boolean isHost;
     private String socket_id;
 

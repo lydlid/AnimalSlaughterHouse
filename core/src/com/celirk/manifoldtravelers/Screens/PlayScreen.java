@@ -35,45 +35,45 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlayScreen implements Screen {
-    private TextureAtlas atlas;
-    private TextureAtlas particleAtlas;
+    private final TextureAtlas atlas;
+    private final TextureAtlas particleAtlas;
 
-    private TextureAtlas gunPack;
+    private final TextureAtlas gunPack;
 
-    private GameSocket socket;
+    private final GameSocket socket;
 
-    private ManifoldTravelers game;
+    private final ManifoldTravelers game;
 
-    private OrthographicCamera gamecam;
-    private Viewport gamePort;
-    private Hud hud;
+    private final OrthographicCamera gamecam;
+    private final Viewport gamePort;
+    private final Hud hud;
 
-    private TmxMapLoader mapLoader;
-    private TiledMap map;
-    private OrthogonalTiledMapRenderer renderer;
+    private final TmxMapLoader mapLoader;
+    private final TiledMap map;
+    private final OrthogonalTiledMapRenderer renderer;
 
-    private World world;
-    private Box2DDebugRenderer b2dr;
+    private final World world;
+    private final Box2DDebugRenderer b2dr;
 
-    private B2WorldCreator creator;
+    private final B2WorldCreator creator;
 
     private Player player;
 
-    private HashMap<String, Player> enemies;
-    private ArrayList<String> enemies_to_destroy;
+    private final HashMap<String, Player> enemies;
+    private final ArrayList<String> enemies_to_destroy;
 
-    private Array<Item> items;
+    private final Array<Item> items;
 
-    private Array<Projectile> projectiles;
+    private final Array<Projectile> projectiles;
 
     private final int update_every_n_frames = 5;
-    private int n_frames_without_update = update_every_n_frames;
+    private final int n_frames_without_update = update_every_n_frames;
 
     private boolean isInitialized;
 
-    private Music music;
+    private final Music music;
 
-    private Array<ParticleEffect> particle_effects;
+    private final Array<ParticleEffect> particle_effects;
 
 
     public PlayScreen(ManifoldTravelers game) {
@@ -256,10 +256,7 @@ public class PlayScreen implements Screen {
     }
 
     public boolean gameOver() {
-        if (player.currentState == Player.State.DEAD && player.getStateTimer() > 3) {
-            return true;
-        } else
-            return false;
+        return player.currentState == Player.State.DEAD && player.getStateTimer() > 3;
     }
 
     @Override

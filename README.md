@@ -24,6 +24,7 @@
 ### 2. implementation of online multiplayer
 
 We used socket.io to implement our online multiplayer.
+We made the server using node.js to simplify the work.
 There is a host that actually update the world,
 other players(slaves) only listen to the host and update
 from the host.

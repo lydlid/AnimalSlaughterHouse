@@ -11,7 +11,6 @@ import com.celirk.manifoldtravelers.Screens.MenuScreen;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import netscape.javascript.JSObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
