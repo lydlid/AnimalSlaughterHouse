@@ -1,5 +1,8 @@
 # Animal Slaughter House
 
+To run, input command
+``java -jar .\desktop-1.0.jar [ip] ``
+
 ## Brief introduction
 
 - A primitive 2D game implemented with LibGDX.
@@ -22,9 +25,6 @@
 - Projectile inherits from Sprite class of LibGDX.
 
 ### 2. implementation of online multiplayer
-- We used socket.io to implement our online multiplayer.
-- There is a host that actually update the world,
-
 We used socket.io to implement our online multiplayer.
 We made the server using node.js to simplify the work.
 There is a host that actually update the world,

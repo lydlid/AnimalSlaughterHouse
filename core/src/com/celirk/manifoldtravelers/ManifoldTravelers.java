@@ -38,11 +38,18 @@ public class ManifoldTravelers extends Game {
     public static final int MASK_ITEM = CATEGORY_PLAYER | CATEGORY_ITEM | CATEGORY_GROUND | CATEGORY_SPAWNER;
     public static final int MASK_PROJECTILE = CATEGORY_GROUND | CATEGORY_PLAYER;
 
+    public static String ip;
+
     public SpriteBatch batch;
 
 
     public static AssetManager manager;
 
+    public ManifoldTravelers (String args[]) {
+        super();
+        ip = args[0];
+
+    }
     @Override
     public void create() {
         batch = new SpriteBatch();
