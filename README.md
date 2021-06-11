@@ -22,20 +22,23 @@
 - Projectile inherits from Sprite class of LibGDX.
 
 ### 2. implementation of online multiplayer
+- We used socket.io to implement our online multiplayer.
+- There is a host that actually update the world,
 
 We used socket.io to implement our online multiplayer.
 We made the server using node.js to simplify the work.
 There is a host that actually update the world,
 other players(slaves) only listen to the host and update
 from the host.
-For every frame, the host pack sprites in the world into 
+- For every frame, the host pack sprites in the world into 
 a json file to synchronize all clients.
 
 ### 3. drawing map and sprites
-
 LibGDX offers a way to create textures for sprites.
 For each frame sprites are batched and rendered.
-
+- map: We use Tiled(https://www.mapeditor.org/)  to make our map,
+  and loaded by class ==TmxMaPLoader==.
+- sprites: most pixelated pictures found online. 
+  All sprites  are rendered in ==PlayScreen== and some of the sprites are animated by a series of pictures.
 ### 4. bgm & sound effect
 
-Implemented using native libraries from LibGDX.
