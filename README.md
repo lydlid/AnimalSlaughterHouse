@@ -3,7 +3,6 @@
 ## How to play
 To run the jar, input command
 ``java -jar .\desktop-1.0.jar [ip] ``
-Current server ip:  10.46.180.92
 You will need node.js to run the server.
 WASD to move, click to shoot.
 
