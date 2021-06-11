@@ -42,7 +42,6 @@ public class GameSocket {
 
     public void connectSocket(){
         try{
-
             socket = IO.socket("http://" + ManifoldTravelers.ip + ":5432");
             //socket = IO.socket("http://10.46.180.92:5432");
             //socket = IO.socket("http://10.44.64.238:5432");

@@ -31,6 +31,7 @@ WASD to move, click to shoot.
 
 ### 3. implementation of online multiplayer
 We used socket.io to implement our online multiplayer.
+Socket.io is event-driven and is 
 We made the server using node.js to simplify the work.
 There is a host that actually update the world,
 other players(slaves) only listen to the host and update
@@ -44,6 +45,11 @@ For each frame sprites are batched and rendered.
 - map: We use Tiled(https://www.mapeditor.org/)  to make our map,
   and loaded by class ==TmxMaPLoader==.
 - sprites: most pixelated pictures found online. 
-  All sprites  are rendered in ==PlayScreen== and some of the sprites are animated by a series of pictures.
+  All sprites are rendered in ==PlayScreen== and some of the sprites are animated by a series of pictures.
 ### 5. bgm & sound effect
-We implement sound using LibGDX native libraries 
+We implement sound using LibGDX native libraries,
+BGM is made by us and copyleft.
+
+### 6. particle effect
+particle effects are provided by LibGDX.
+These effects, generally speaking, are also sprites.
