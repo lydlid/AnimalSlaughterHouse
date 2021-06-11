@@ -1,7 +1,10 @@
 package com.celirk.manifoldtravelers.Sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -46,8 +49,10 @@ public class Player extends Sprite {
     protected boolean toDestroy;
     protected boolean destroyed;
 
-    String id;
+    private String id;
     private boolean playerIsDead;
+
+    private ParticleEffect blood_effect;
 
 
     public Player(PlayScreen screen, float x, float y) {
@@ -89,6 +94,9 @@ public class Player extends Sprite {
         //create texture for dead player
         playerDead = new TextureRegion(screen.getAtlas().findRegion("dog"), 0,0,32,32);
 
+        blood_effect = new ParticleEffect();
+        blood_effect.load(Gdx.files.internal("ParticleEffects/blood.p"), screen.getParticleAtlas());
+
         definePlayer(x, y);
         defineUtils();
 
@@ -119,6 +127,7 @@ public class Player extends Sprite {
         weapon_on_hand = 0;
         hit_point = 100;
         //hp_indicator = new Indicator((int) getX(), (int) getY());
+        screen.appendParticleEffect(blood_effect);
     }
 
     //GAME OVER screen
@@ -149,6 +158,8 @@ public class Player extends Sprite {
                         (body.getPosition().y-screen.getPlayer().getbody().getPosition().y) * ManifoldTravelers.PPM);
 
         setRegion(getFrame(dt));
+
+        blood_effect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
 
         if(toDestroy && !destroyed){
             world.destroyBody(body);
@@ -233,7 +244,7 @@ public class Player extends Sprite {
                 1,
                 (body.getPosition().x - screen.getPlayer().body.getPosition().x)/100
         );
-        screen.appendParticleEffect();
+        blood_effect.start();
         hit_point -= delta_hp;
         if(hit_point <= 0){
             ManifoldTravelers.manager.get("audio/sounds/die.wav", Sound.class).play(

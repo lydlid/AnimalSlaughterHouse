@@ -36,10 +36,7 @@ import java.util.HashMap;
 
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
-
-    public TextureAtlas getGunPack() {
-        return gunPack;
-    }
+    private TextureAtlas particleAtlas;
 
     private TextureAtlas gunPack;
 
@@ -77,19 +74,17 @@ public class PlayScreen implements Screen {
     private Music music;
 
     private Array<ParticleEffect> particle_effects;
-    private ParticleEffect blood_effect;
 
 
     public PlayScreen(ManifoldTravelers game) {
         isInitialized = false;
 
-        // definition at same palce
+        // definition at same place
         atlas = new TextureAtlas("animalWithBullet.pack");
         gunPack = new TextureAtlas("weapon/weapon.pack");
+        particleAtlas = new TextureAtlas("ParticleEffects/particle.pack");
 
         particle_effects = new Array<ParticleEffect>();
-        blood_effect = new ParticleEffect();
-        blood_effect.load(Gdx.files.internal("ParticleEffects/blood.p"), Gdx.files.internal("./ParticleEffects"));
 
         this.game = game;
 
@@ -117,7 +112,7 @@ public class PlayScreen implements Screen {
         enemies = new HashMap<>();
         enemies_to_destroy = new ArrayList<>();
 
-        items = new Array<Item>(false,128);
+        items = new Array<Item>(false, 128);
 
         projectiles = new Array<Projectile>(false, 128);
 
@@ -128,7 +123,7 @@ public class PlayScreen implements Screen {
         music.play();
     }
 
-    public TextureAtlas getAtlas(){
+    public TextureAtlas getAtlas() {
         return atlas;
     }
 
@@ -150,24 +145,25 @@ public class PlayScreen implements Screen {
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         game.batch.begin();
-        if(isInitialized){
+        if (isInitialized) {
             player.draw(game.batch);
-            for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
-                if(entry.getValue().getHit_point()>0)
+            for (HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+                if (entry.getValue().getHit_point() > 0)
                     entry.getValue().draw(game.batch);
             }
         }
         //draw weapon pack
-        for(Item item : items){
+        for (Item item : items) {
             item.draw(game.batch);
         }
         //draw bullet
-        for(Projectile projectile : projectiles){
+        for (Projectile projectile : projectiles) {
             projectile.draw(game.batch);
         }
         // draw particles
-        for(ParticleEffect effect : particle_effects) {
+        for (ParticleEffect effect : particle_effects) {
             effect.draw(game.batch, delta);
+
         }
 
 
@@ -175,7 +171,7 @@ public class PlayScreen implements Screen {
 
         hud.stage.draw();
 
-        if(isInitialized&&gameOver()){
+        if (isInitialized && gameOver()) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
@@ -206,7 +202,7 @@ public class PlayScreen implements Screen {
     public void update(float dt) {
         if (isInitialized) {
 
-            if(socket.needUpdate()) {
+            if (socket.needUpdate()) {
                 if (socket.isHost()) {
 
                     socket.hostUpdateFromBuffer();
@@ -235,7 +231,7 @@ public class PlayScreen implements Screen {
             }
 
             if (socket.isHost()) {
-                for(Spawner spawner : creator.getSpawners()) {
+                for (Spawner spawner : creator.getSpawners()) {
                     spawner.update(dt);
                 }
                 socket.pushHostUpdate();
@@ -259,11 +255,10 @@ public class PlayScreen implements Screen {
         renderer.setView(gamecam);
     }
 
-    public boolean gameOver(){
-        if(player.currentState == Player.State.DEAD && player.getStateTimer() > 3){
+    public boolean gameOver() {
+        if (player.currentState == Player.State.DEAD && player.getStateTimer() > 3) {
             return true;
-        }
-        else
+        } else
             return false;
     }
 
@@ -307,12 +302,15 @@ public class PlayScreen implements Screen {
     public void appendItem(Item item) {
         items.add(item);
     }
+
     public void removeItem(Item item) {
-        items.removeValue(item,true);
+        items.removeValue(item, true);
     }
+
     public void appendProjectile(Projectile projectile) {
         projectiles.add(projectile);
     }
+
     public void removeProjectile(Projectile projectile) {
         projectiles.removeValue(projectile, true);
     }
@@ -349,11 +347,19 @@ public class PlayScreen implements Screen {
         return socket;
     }
 
-    public void appendParticleEffect() {
-        particle_effects.add( blood_effect);
+    public void appendParticleEffect(ParticleEffect effect) {
+        particle_effects.add(effect);
     }
 
     public void removeEnemy(String id) {
         enemies_to_destroy.add(id);
+    }
+
+    public TextureAtlas getGunPack() {
+        return gunPack;
+    }
+
+    public TextureAtlas getParticleAtlas() {
+        return particleAtlas;
     }
 }
