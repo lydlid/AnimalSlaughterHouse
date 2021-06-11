@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -29,10 +31,12 @@ import com.celirk.manifoldtravelers.Utils.WorldContactListener;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlayScreen implements Screen {
     private TextureAtlas atlas;
+    private TextureAtlas particleAtlas;
 
     private TextureAtlas gunPack;
 
@@ -56,6 +60,7 @@ public class PlayScreen implements Screen {
     private Player player;
 
     private HashMap<String, Player> enemies;
+    private ArrayList<String> enemies_to_destroy;
 
     private Array<Item> items;
 
@@ -68,13 +73,18 @@ public class PlayScreen implements Screen {
 
     private Music music;
 
+    private Array<ParticleEffect> particle_effects;
+
 
     public PlayScreen(ManifoldTravelers game) {
         isInitialized = false;
 
-        //defination at same palce
+        // definition at same place
         atlas = new TextureAtlas("animalWithBullet.pack");
         gunPack = new TextureAtlas("weapon/weapon.pack");
+        particleAtlas = new TextureAtlas("ParticleEffects/particle.pack");
+
+        particle_effects = new Array<ParticleEffect>();
 
         this.game = game;
 
@@ -100,8 +110,9 @@ public class PlayScreen implements Screen {
         // player = new Player(this, 128f, 128f);
 
         enemies = new HashMap<>();
+        enemies_to_destroy = new ArrayList<>();
 
-        items = new Array<Item>(false,128);
+        items = new Array<Item>(false, 128);
 
         projectiles = new Array<Projectile>(false, 128);
 
@@ -112,7 +123,7 @@ public class PlayScreen implements Screen {
         music.play();
     }
 
-    public TextureAtlas getAtlas(){
+    public TextureAtlas getAtlas() {
         return atlas;
     }
 
@@ -134,27 +145,33 @@ public class PlayScreen implements Screen {
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         game.batch.begin();
-        if(isInitialized){
+        if (isInitialized) {
             player.draw(game.batch);
-            for(HashMap.Entry<String, Player> entry : enemies.entrySet()) {
-                if(entry.getValue().getHit_point()>0)
+            for (HashMap.Entry<String, Player> entry : enemies.entrySet()) {
+                if (entry.getValue().getHit_point() > 0)
                     entry.getValue().draw(game.batch);
             }
         }
         //draw weapon pack
-        for(Item item : items){
+        for (Item item : items) {
             item.draw(game.batch);
         }
         //draw bullet
-        for(Projectile projectile : projectiles){
+        for (Projectile projectile : projectiles) {
             projectile.draw(game.batch);
         }
+        // draw particles
+        for (ParticleEffect effect : particle_effects) {
+            effect.draw(game.batch, delta);
+
+        }
+
 
         game.batch.end();
 
         hud.stage.draw();
 
-        if(isInitialized&&gameOver()){
+        if (isInitialized && gameOver()) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
@@ -183,24 +200,26 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt) {
-        if (isInitialized && socket.needUpdate()) {
-            if (socket.isHost()) {
-                // System.out.println("update");
-                socket.hostUpdateFromBuffer();
-            } else {
-                socket.slaveUpdateFromBuffer();
+        if (isInitialized) {
+
+            if (socket.needUpdate()) {
+                if (socket.isHost()) {
+
+                    socket.hostUpdateFromBuffer();
+                } else {
+                    socket.slaveUpdateFromBuffer();
+                }
+                socket.setNeedUpdate(false);
             }
-            socket.setNeedUpdate(false);
-        }
 
-        world.step(dt, 6, 2);
-
-        if(isInitialized) {
             handleInput(dt);
             player.update(dt);
 
             for (HashMap.Entry<String, Player> entry : enemies.entrySet()) {
                 entry.getValue().update(dt);
+            }
+            for (String id : enemies_to_destroy) {
+                enemies.remove(id);
             }
 
             for (Projectile projectile : projectiles) {
@@ -210,39 +229,36 @@ public class PlayScreen implements Screen {
             for (Item item : items) {
                 item.update(dt);
             }
-        }
 
-        //n_frames_without_update++;
-        // update with server
-        if (socket.isHost()) {
-            for(Spawner spawner : creator.getSpawners()) {
-                spawner.update(dt);
-            }
-            if(isInitialized){
+            if (socket.isHost()) {
+                for (Spawner spawner : creator.getSpawners()) {
+                    spawner.update(dt);
+                }
                 socket.pushHostUpdate();
                 socket.pushSlaveUpdate();
-            }
-        } else {
-            if(isInitialized) {
+            } else {
                 socket.pushSlaveUpdate();
-                //System.out.println(enemies.size());
             }
-        }
 
-        hud.update(dt);
-        if(isInitialized) {
+            hud.update(dt);
             gamecam.position.x = player.body.getPosition().x;
             gamecam.position.y = player.body.getPosition().y;
         }
+
+        world.step(dt, 6, 2);
+
+
+        //n_frames_without_update++;
+        // update with server
+
         gamecam.update();
         renderer.setView(gamecam);
     }
 
-    public boolean gameOver(){
-        if(player.currentState == Player.State.DEAD && player.getStateTimer() > 3){
+    public boolean gameOver() {
+        if (player.currentState == Player.State.DEAD && player.getStateTimer() > 3) {
             return true;
-        }
-        else
+        } else
             return false;
     }
 
@@ -286,12 +302,15 @@ public class PlayScreen implements Screen {
     public void appendItem(Item item) {
         items.add(item);
     }
+
     public void removeItem(Item item) {
-        items.removeValue(item,true);
+        items.removeValue(item, true);
     }
+
     public void appendProjectile(Projectile projectile) {
         projectiles.add(projectile);
     }
+
     public void removeProjectile(Projectile projectile) {
         projectiles.removeValue(projectile, true);
     }
@@ -328,8 +347,19 @@ public class PlayScreen implements Screen {
         return socket;
     }
 
+    public void appendParticleEffect(ParticleEffect effect) {
+        particle_effects.add(effect);
+    }
+
+    public void removeEnemy(String id) {
+        enemies_to_destroy.add(id);
+    }
+
     public TextureAtlas getGunPack() {
         return gunPack;
     }
 
+    public TextureAtlas getParticleAtlas() {
+        return particleAtlas;
+    }
 }
