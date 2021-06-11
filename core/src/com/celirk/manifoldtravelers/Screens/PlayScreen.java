@@ -31,6 +31,7 @@ import com.celirk.manifoldtravelers.Utils.WorldContactListener;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlayScreen implements Screen {
@@ -62,6 +63,7 @@ public class PlayScreen implements Screen {
     private Player player;
 
     private HashMap<String, Player> enemies;
+    private ArrayList<String> enemies_to_destroy;
 
     private Array<Item> items;
 
@@ -113,6 +115,7 @@ public class PlayScreen implements Screen {
         // player = new Player(this, 128f, 128f);
 
         enemies = new HashMap<>();
+        enemies_to_destroy = new ArrayList<>();
 
         items = new Array<Item>(false,128);
 
@@ -201,24 +204,26 @@ public class PlayScreen implements Screen {
     }
 
     public void update(float dt) {
-        if (isInitialized && socket.needUpdate()) {
-            if (socket.isHost()) {
-                // System.out.println("update");
-                socket.hostUpdateFromBuffer();
-            } else {
-                socket.slaveUpdateFromBuffer();
+        if (isInitialized) {
+
+            if(socket.needUpdate()) {
+                if (socket.isHost()) {
+
+                    socket.hostUpdateFromBuffer();
+                } else {
+                    socket.slaveUpdateFromBuffer();
+                }
+                socket.setNeedUpdate(false);
             }
-            socket.setNeedUpdate(false);
-        }
 
-        world.step(dt, 6, 2);
-
-        if(isInitialized) {
             handleInput(dt);
             player.update(dt);
 
             for (HashMap.Entry<String, Player> entry : enemies.entrySet()) {
                 entry.getValue().update(dt);
+            }
+            for (String id : enemies_to_destroy) {
+                enemies.remove(id);
             }
 
             for (Projectile projectile : projectiles) {
@@ -228,30 +233,28 @@ public class PlayScreen implements Screen {
             for (Item item : items) {
                 item.update(dt);
             }
-        }
 
-        //n_frames_without_update++;
-        // update with server
-        if (socket.isHost()) {
-            for(Spawner spawner : creator.getSpawners()) {
-                spawner.update(dt);
-            }
-            if(isInitialized){
+            if (socket.isHost()) {
+                for(Spawner spawner : creator.getSpawners()) {
+                    spawner.update(dt);
+                }
                 socket.pushHostUpdate();
                 socket.pushSlaveUpdate();
-            }
-        } else {
-            if(isInitialized) {
+            } else {
                 socket.pushSlaveUpdate();
-                //System.out.println(enemies.size());
             }
-        }
 
-        hud.update(dt);
-        if(isInitialized) {
+            hud.update(dt);
             gamecam.position.x = player.body.getPosition().x;
             gamecam.position.y = player.body.getPosition().y;
         }
+
+        world.step(dt, 6, 2);
+
+
+        //n_frames_without_update++;
+        // update with server
+
         gamecam.update();
         renderer.setView(gamecam);
     }
@@ -348,5 +351,9 @@ public class PlayScreen implements Screen {
 
     public void appendParticleEffect() {
         particle_effects.add( blood_effect);
+    }
+
+    public void removeEnemy(String id) {
+        enemies_to_destroy.add(id);
     }
 }

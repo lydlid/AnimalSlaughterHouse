@@ -153,7 +153,7 @@ public class Player extends Sprite {
         if(toDestroy && !destroyed){
             world.destroyBody(body);
             destroyed = true;
-            screen.getEnemies().remove(this.id);
+            screen.removeEnemy(this.id);
         }
 
     }

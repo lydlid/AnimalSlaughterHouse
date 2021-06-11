@@ -16,7 +16,6 @@ public class PistolBullet extends Projectile {
         id = 1;
         setBounds(x,y,16,16);
         setRegion(bulletPic);
-        System.out.println(screen.getPlayer().body.getPosition().dst(body.getPosition()));
         ManifoldTravelers.manager.get("audio/sounds/pistol_shoot.wav", Sound.class).play(
                 1 - screen.getPlayer().body.getPosition().dst(body.getPosition())/100,
                 1,
@@ -35,8 +34,7 @@ public class PistolBullet extends Projectile {
         //setPosition((float) (body.getPosition().x+(11.5)*getWidth()/2)*3,(body.getPosition().y + 6*getHeight()/2)*3);
         setPosition((body.getPosition().x-screen.getPlayer().body.getPosition().x)*ManifoldTravelers.PPM + getWidth()/2 + ManifoldTravelers.V_WIDTH/2 - screen.getPlayer().getWidth()/2,
                 (body.getPosition().y-screen.getPlayer().body.getPosition().y)*ManifoldTravelers.PPM + getHeight()/2 + ManifoldTravelers.V_HEIGHT/2 - screen.getPlayer().getHeight()/2);
-        //System.out.print("x:"+body.getPosition().x - screen.getPlayer().b2body.getPosition().x+"\n");
-        //System.out.print("y:"+body.getPosition().y+"\n");
+
 
         setRegion(bulletPic);
 

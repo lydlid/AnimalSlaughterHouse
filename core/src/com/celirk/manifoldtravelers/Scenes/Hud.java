@@ -18,15 +18,11 @@ import static java.lang.Math.round;
 public class Hud implements Disposable {
     private PlayScreen screen;
     public Stage stage;
-    Label countdownLabel;
     private Viewport viewport;
     private Integer worldTimer;
     Label FPSLabel;
     Label hostLabel;
-//    Label timeLabel;
-//    Label levelLabel;
-//    Label worldLabel;
-//    Label playerLabel;
+    Label HitPointLabel;
 
     public Hud(SpriteBatch sb, PlayScreen screen) {
         this.screen = screen;
@@ -39,18 +35,18 @@ public class Hud implements Disposable {
         table.top();
         table.setFillParent(true);
         // just an example
-        countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+
         // maybe we dont need too many labels here.
         // if needed just add some labels and u know.
         // this is more of an example here? maybe
         // table.row();
         // to start a new row
         FPSLabel = new Label("0", new Label.LabelStyle(new BitmapFont(), Color.CHARTREUSE));
-
-        hostLabel = new Label("false", new Label.LabelStyle(new BitmapFont(), Color.CHARTREUSE));
+        HitPointLabel = new Label("0", new Label.LabelStyle(new BitmapFont(), Color.MAROON));
+        hostLabel = new Label("false", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
         table.add(FPSLabel).expandX().padTop(10);
-        table.add(countdownLabel).expandX().padTop(10);
+        table.add(HitPointLabel).expandX().padTop(10);
         table.add(hostLabel).expandX().padTop(10);
         stage.addActor(table);
     }
@@ -62,11 +58,10 @@ public class Hud implements Disposable {
 
     public void update(float dt){
         FPSLabel.setText("FPS: " + round(1 / dt));
-        try {
-            hostLabel.setText("Host:" + screen.getSocket().isHost());
-        }catch (Exception e) {
 
-        }
+        hostLabel.setText("Host:" + screen.getSocket().isHost());
+
+        HitPointLabel.setText("HP: " + screen.getPlayer().getHit_point());
 
     }
 }
