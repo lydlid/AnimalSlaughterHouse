@@ -11,11 +11,11 @@ import org.w3c.dom.Text;
 public class MenuScreen implements Screen {
 
     private static final int EXIT_BUTTON_WIDTH = 125;
-    private static final int EXIT_BUTTON_HEIGHT = 60;
+    private static final int EXIT_BUTTON_HEIGHT = 50;
     private static final int PLAY_BUTTON_WIDTH = 125;
-    private static final int PLAY_BUTTON_HEIGHT = 60;
-    private static final int EXIT_BUTTON_Y = 300;
-    private static final int PLAY_BUTTON_Y = 300;
+    private static final int PLAY_BUTTON_HEIGHT = 50;
+    private static final int EXIT_BUTTON_Y = 275;
+    private static final int PLAY_BUTTON_Y = 275;
 
     final ManifoldTravelers game;
 
@@ -51,7 +51,7 @@ public class MenuScreen implements Screen {
         game.batch.draw(background,0,0);
 
         //title
-        game.batch.draw(title,100,450);
+        game.batch.draw(title,80,450);
 
         //EXIT button
         int x = 1280 - ManifoldTravelers.V_WIDTH/2 - PLAY_BUTTON_WIDTH / 2;
