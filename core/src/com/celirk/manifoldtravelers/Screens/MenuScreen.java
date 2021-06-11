@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.celirk.manifoldtravelers.ManifoldTravelers;
+import org.w3c.dom.Text;
 
 
 public class MenuScreen implements Screen {
@@ -19,6 +20,7 @@ public class MenuScreen implements Screen {
     final ManifoldTravelers game;
 
     Texture background;
+    Texture title;
     Texture playButtonActive;
     Texture playButtonInactive;
     Texture exitButtonActive;
@@ -32,7 +34,7 @@ public class MenuScreen implements Screen {
         playButtonInactive   = new Texture("play_button_inactive.png");
         exitButtonActive   = new Texture("exit_button_active.png");
         exitButtonInactive   = new Texture("exit_button_inactive.png");
-
+        title = new Texture("title_pink.png");
     }
 
     @Override
@@ -45,9 +47,11 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
-
         //background
         game.batch.draw(background,0,0);
+
+        //title
+        game.batch.draw(title,100,450);
 
         //EXIT button
         int x = 1280 - ManifoldTravelers.V_WIDTH/2 - PLAY_BUTTON_WIDTH / 2;
