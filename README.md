@@ -1,29 +1,40 @@
 # Animal Slaughter House
 
-## brief introduction
+## Brief introduction
 
-- This is a small game that we have implemented based on libgdx.
-- The basic idea is a multiplayer online battle royale mode game.
+- A primitive 2D game implemented with LibGDX.
+- Features: Multiplayer, online battle-royale.
 - Basic settings
-    - Each player has an initial 100 blood.
-    - The default birth point for each player is the bottom left corner of the entire map.
-    - Each map has a few drop points where you can pick up a specific weapon. After that , you can use your current weapon to attack other players on the server.
-    - The winning condition is to kill all players on the server and the winner is the one who survives to the end.
+    - Each player has 100 HP at the beginning.
+    - Every player will be spawned in the bottom left corner of the entire map.
+    - There are a few drop points scattered in the world where you can pick up a specific weapon. After that, you can use your current weapon to attack other players on the server.
+    - Kill all players on the server and survive to the end to win!
 
-## main framework
+## Main Framework
 
 ![framework2](framework2.png)
 
-## a  few points to note
+## A few points to note
 
-### 1. Projectile class
+### 1. Projectile class as an example of sprite
 
+- Everything shown in the screen is a sprite.
+- Projectile inherits from Sprite class of LibGDX.
 
 ### 2. implementation of online multiplayer
+We used socket.io to implement our online multiplayer.
+There is a host that actually update the world,
+other players(slaves) only listen to the host and update
+from the host.
+For every frame, the host pack sprites in the world into 
+a json file to synchronize all clients.
 
+### 3. drawing map and sprites
 
+LibGDX offers a way to create textures for sprites.
+For each frame sprites are batched and rendered.
 ### 3. map plotting &player、item sprite
 - map: We use Tiled(https://www.mapeditor.org/)  to make our map, and loaded by class ==TmxMaPLoader==.
 - sprites: most pixelated pictures found online. All sprites  are rendered in ==PlayScreen== and some of the sprites are animated by a series of pictures.
-### 4. bgm&sound effect
+### 4. bgm & sound effect
 
