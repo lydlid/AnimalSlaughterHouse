@@ -1,10 +1,11 @@
 # Animal Slaughter House
 
 ## How to play
-To run the jar, input command
-``java -jar .\desktop-1.0.jar [ip] ``
-You will need node.js to run the server.
-WASD to move, click to shoot.
+- First, start nodejs server
+   - To start the server, input command ``node index.js`` in path ``AnimalSlaughterHouse/sever``
+- Second, run client
+   - To run the jar, input command ``java -jar .\desktop-1.0.jar [ip] ``
+   - WASD to move, click to shoot.
 
 ## Brief introduction
 
